@@ -1,6 +1,6 @@
-/* Filename                 : 
- * Name of Class            :
- * Name of Methods          :
+/* Filename                 : Motor.h
+ * Name of Class            :Motor
+ * Name of Methods          :SetDirection(),ToggleDirction(),SetSpeed();
  * Name of Member Variables :
  *
  */
@@ -14,7 +14,12 @@ class Motor
     int _PWM;
 
     public:
-    Motor(int _DirPin, bool _Dir, int _PWM_Pin);
+    Motor(int _DirPin, bool _Dir, int _PWM_Pin)
+    {
+        pinMode(_DirPin,OUTPUT);
+        pinMode(_PWM_Pin,OUTPUT);
+    }
+
     void SetDirection();
     void ToggleDirection();
     void SetSpeed(int _PWM);
