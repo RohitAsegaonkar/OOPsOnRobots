@@ -1,5 +1,5 @@
 /* Filename                 : 
- * Name of Calss            :
+ * Name of Class            :
  * Name of Methods          :
  * Name of Member Variables :
  *
