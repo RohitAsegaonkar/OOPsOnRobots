@@ -1,9 +1,16 @@
-//#include "Motor.h"
 #include "Encoder.h"
+#include "Mpu.h"
+#include "Motor.h"
+#include "Manual.h"
 
-//Motor M1(34,0,9);
-Encoder X(21,50);
-Encoder Y(2,52);
+    Manual A();
+    Encoder X(21,50);
+    Encoder Y(2,52);
+    Mpu V();
+    Motor M1(34,A().dirW1,9);
+    Motor M2(28,A().dirW2,6);
+    Motor M3(30,A().dirW3,7);
+    
   
 void UpdateXEncoder()
 {
@@ -15,20 +22,87 @@ void UpdateYEncoder()
   Y.updateEncoder();
 }
 
+//Variables to accept charater from Controller
+char command;
+char prevCommand = 'a';
+
+void reset()
+{
+  Y.encodervalue = 0;
+  X.encodervalue = 0;
+  Manual().Yaw = V().readMpu();
+  Manual().Shifted_Yaw = Manual.Yaw;
+  Serial.println("In Reset");
+  Serial.println(Manual().Shifted_Yaw);
+  A().pwmm1 = 0;
+  A().pwmm2 = 0;
+  A().pwmm3 = 0;
+}
+
 void setup() 
 {  
   Serial.begin(115200);
-//Motor M1(34,0,9);
-
-
-  attachInterrupt(0, UpdateXEncoder, RISING);                                          // interrupt of encoder1 will be triggered at the rising edge
-  attachInterrupt(2, UpdateYEncoder, RISING);                                          // interrupt of encoder2 will be triggered at the rising edge
+  Serial1.begin(115200);
+  Serial3.begin(115200);
 }
 
 void loop()
 {
-  Serial.print("EncoderX: ");
-  Serial.print(X.encodervalue);
-  Serial.print("    EncoderY: ");
-  Serial.println(Y.encodervalue);
+if (Serial1.available())
+  {
+    command = Serial1.read();
+  }
+  Serial.print(command);
+
+  if (prevCommand != command && (command != 'c' || command != 'd'))
+  {
+    reset();
+  }
+
+  switch (command)
+  {
+    case 'F':
+      void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward);
+      Serial.println("In F");
+      break;
+
+    case 'B':
+      void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
+      Serial.println("In B");
+      break;
+
+    case 'L':
+      void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left);
+      Serial.println("In L");
+      break;
+
+    case 'R':
+      void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right);
+      Serial.println("In R");
+      break;
+
+    case 'S':
+      analogWrite(pwm1, 0);
+      analogWrite(pwm2, 0);
+      analogWrite(pwm3, 0);
+      Serial.println("In s");
+      break;
+
+    case 's':
+      analogWrite(pwm1, 0);
+      analogWrite(pwm2, 0);
+      analogWrite(pwm3, 0);
+
+      Serial.println("In s");
+      break;
+
+    default:
+      analogWrite(pwm1, 0);
+      analogWrite(pwm2, 0);
+      analogWrite(pwm3, 0);
+
+      Serial.println("In Default");
+  }
+  prevCommand = command;
+}
 }

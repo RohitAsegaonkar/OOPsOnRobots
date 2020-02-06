@@ -1,3 +1,6 @@
+#ifndef _Encoder_
+#define _Encoder_
+
 class Encoder
 {
 
@@ -36,3 +39,4 @@ void updateEncoder()
 }      
 
 };
+#endif

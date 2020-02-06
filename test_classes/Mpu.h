@@ -1,10 +1,13 @@
+#ifndef _Mpu_
+#define _Mpu_
+
 class Mpu
 {
 private:
     /* data */
 public:
     Mpu(/* args */);
-    int readMpu();
+    int readMpu(int s = 3);
 };
 
 Mpu::Mpu(/* args */)
@@ -61,3 +64,4 @@ int Mpu::readMpu(int s = 3)
 
     }
 }
+#endif
