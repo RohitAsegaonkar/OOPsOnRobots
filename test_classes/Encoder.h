@@ -1,5 +1,10 @@
 class Encoder
 {
+
+    private:
+    volatile int a, b;
+    int encoderPin , comparePin; 
+
     public:
     /******* Variables for the encoder *******/
     volatile int encodervalue;                                                // Count of pulses from encoder 1 and encoder 2
@@ -30,7 +35,4 @@ void updateEncoder()
         encodervalue--;
 }      
 
-    private:
-    volatile int a, b;
-    int encoderPin , comparePin; 
 };
