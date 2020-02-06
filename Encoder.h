@@ -1,16 +1,18 @@
-class Encoder{
-  public:
-         /******* Variables for the encoder *******/
-         volatile int encodervalue;                                                // Count of pulses from encoder 1 and encoder 2
+class Encoder
+{
+    public:
+    /******* Variables for the encoder *******/
+    volatile int encodervalue;                                                // Count of pulses from encoder 1 and encoder 2
 
-         Encoder(int EP1,int CP1 ){
-             encoderPin = EP1;
-             comparePin = CP1;
-             pinMode(encoderPin,INPUT);
-             pinMode(comparePin,INPUT);
+    Encoder(int EP1,int CP1 )
+    {
+        encoderPin = EP1;
+        comparePin = CP1;
+        pinMode(encoderPin,INPUT);
+        pinMode(comparePin,INPUT);
+    }
 
-         }
-     /*
+/*
  *  Function Name       : updateEncoder()
  *  Input               : No input required
  *  Output              : pulses of the x encoder stored in variable encodervalue1
@@ -22,17 +24,13 @@ void updateEncoder()
 {
     a = digitalRead(encoderPin);
     b = digitalRead(comparePin);
-
     if (b == 1)
         encodervalue++;
     if (b == 0)
         encodervalue--;
 }      
-       
- private:
-         volatile int a, b;
-         int encoderPin , comparePin; 
 
-
-
+    private:
+    volatile int a, b;
+    int encoderPin , comparePin; 
 };
