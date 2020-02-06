@@ -62,6 +62,13 @@ public:
     #define Maxpwm 150.00
     #define basePwm 100
     int pwmm1, pwmm2, pwmm3;
+        /************************ Objects Created *********************************/
+    Encoder X(21,50);
+    Encoder Y(2,52);
+    Mpu V();
+    Motor M1(34,dirW1,9);
+    Motor M2(28,dirW2,6);
+    Motor M3(30,dirW3,7);
     void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward);
     void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
     void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left);
@@ -83,15 +90,8 @@ Manual::Manual(/* args */)
  */
 void Manual :: forwardManY(float kp_strm2_forward,float kp_strm3_forward,float kp_encoder_forward)
 {
-    /************************ Objects Created *********************************/
-    Encoder X(21,50);
-    Encoder Y(2,52);
-    Mpu V();
-    Motor M1(34,dirW1,9);
-    Motor M2(28,dirW2,6);
-    Motor M3(30,dirW3,7);
 
-    Yaw = V().readMpu();                          // Reading Mpu Values
+    Yaw = V.readMpu();                          // Reading Mpu Values
     error_forward = Yaw - Shifted_Yaw;
 
     error_encoder_forward = X.encodervalue;
@@ -151,15 +151,9 @@ void Manual :: forwardManY(float kp_strm2_forward,float kp_strm3_forward,float k
  */
 void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward)
 {
-    /************************ Objects Created *********************************/
-    Encoder X(21,50);
-    Encoder Y(2,52);
-    Mpu V();
-    Motor M1(34,dirW1,9);
-    Motor M2(28,dirW2,6);
-    Motor M3(30,dirW3,7);
 
-    Yaw = V().readMpu();                         // Reading Mpu Values
+
+    Yaw = V.readMpu();                         // Reading Mpu Values
     error_back = Yaw - Shifted_Yaw;
 
     error_encoder_back = X.encodervalue;
@@ -212,15 +206,8 @@ void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP
  */
 void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left)
 {
-    /************************ Objects Created *********************************/
-    Encoder X(21,50);
-    Encoder Y(2,52);
-    Mpu V();
-    Motor M1(34,dirW1,9);
-    Motor M2(28,dirW2,6);
-    Motor M3(30,dirW3,7);
 
-    Yaw = V().readMpu();
+    Yaw = V.readMpu();
     error_left = Yaw - Shifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function                       //Calculating the basepwm in proportion with the error
 
     error_encoder_left = Y.encodervalue;                                            //Error for locomotion in X direction is given by the y encoder
@@ -279,15 +266,8 @@ void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, fl
  */
 void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right)
 {
- /************************ Objects Created *********************************/
-    Encoder X(21,50);
-    Encoder Y(2,52);
-    Mpu V();
-    Motor M1(34,dirW1,9);
-    Motor M2(28,dirW2,6);
-    Motor M3(30,dirW3,7);
 
-    Yaw = V().readMpu();
+    Yaw = V.readMpu();
 
     error_encoder_right = Y.encodervalue;
     pwm_encoder_right = KP_Enc_Right * (error_encoder_right);

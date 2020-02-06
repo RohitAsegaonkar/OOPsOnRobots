@@ -3,13 +3,13 @@
 #include "Motor.h"
 #include "Manual.h"
 
-    Manual A();
+    Manual A;
     Encoder X(21,50);
     Encoder Y(2,52);
     Mpu V();
-    Motor M1(34,A().dirW1,9);
-    Motor M2(28,A().dirW2,6);
-    Motor M3(30,A().dirW3,7);
+    Motor M1(34,A.dirW1,9);
+    Motor M2(28,A.dirW2,6);
+    Motor M3(30,A.dirW3,7);
     
   
 void UpdateXEncoder()
@@ -30,13 +30,13 @@ void reset()
 {
   Y.encodervalue = 0;
   X.encodervalue = 0;
-  Manual().Yaw = V().readMpu();
-  Manual().Shifted_Yaw = Manual.Yaw;
+  A.Yaw = V().readMpu();
+  A.Shifted_Yaw = A.Yaw;
   Serial.println("In Reset");
   Serial.println(Manual().Shifted_Yaw);
-  A().pwmm1 = 0;
-  A().pwmm2 = 0;
-  A().pwmm3 = 0;
+  A.pwmm1 = 0;
+  A.pwmm2 = 0;
+  A.pwmm3 = 0;
 }
 
 void setup() 
@@ -82,27 +82,26 @@ if (Serial1.available())
       break;
 
     case 'S':
-      analogWrite(pwm1, 0);
-      analogWrite(pwm2, 0);
-      analogWrite(pwm3, 0);
+      analogWrite(A.pwmm1, 0);
+      analogWrite(A.pwmm2, 0);
+      analogWrite(A.pwmm3, 0);
       Serial.println("In s");
       break;
 
     case 's':
-      analogWrite(pwm1, 0);
-      analogWrite(pwm2, 0);
-      analogWrite(pwm3, 0);
+      analogWrite(A.pwmm1, 0);
+      analogWrite(A.pwmm2, 0);
+      analogWrite(A.pwmm3, 0);
 
       Serial.println("In s");
       break;
 
     default:
-      analogWrite(pwm1, 0);
-      analogWrite(pwm2, 0);
-      analogWrite(pwm3, 0);
+      analogWrite(A.pwmm1, 0);
+      analogWrite(A.pwmm2, 0);
+      analogWrite(A.pwmm3, 0);
 
       Serial.println("In Default");
   }
   prevCommand = command;
-}
 }
