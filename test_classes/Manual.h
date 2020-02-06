@@ -8,7 +8,7 @@ private:
 float error_forward;                         //Variable to store the value of the X encoder as error.
 #define Kp_encoder_forward 0.0              //Proportionality constant for the lateral error
 #define Kp_strm2_forward  0.48                //Proportionality constant for the angular error for motor 2
-#define Kp_strm3_forward  0.48                //Proportionality constant for the angular error for motor 3
+#define p_strm3_forward  0.48                //Proportionality constant for the angular error for motor 3
 
 float error_encoder_forward;
 float pwm_encoder_forward;
