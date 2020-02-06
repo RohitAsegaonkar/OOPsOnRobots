@@ -13,8 +13,8 @@ class Encoder
     {
         encoderPin = EP1;
         comparePin = CP1;
-        pinMode(encoderPin,INPUT);
-        pinMode(comparePin,INPUT);
+        pinMode(encoderPin,INPUT_PULLUP);
+        pinMode(comparePin,INPUT_PULLUP);
     }
 
 /*
