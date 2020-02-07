@@ -40,12 +40,14 @@ class Manual
     void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
     void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left);
     void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right);
+    void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir);
+    void TTP_Man(int dir);
 
 
     float error_forward;                                 //Variable to store the value of the X encoder as error.
-    const int Kp_encoder_forward = 0.0 ;                       //Proportionality constant for the lateral error
-    const int Kp_strm2_forward = 0.48 ;                       //Proportionality constant for the angular error for motor 2
-    const int  Kp_strm3_forward = 0.48 ;                        //Proportionality constant for the angular error for motor 3
+    const float Kp_encoder_forward = 0.0 ;                       //Proportionality constant for the lateral error
+    const float Kp_strm2_forward = 0.48 ;                       //Proportionality constant for the angular error for motor 2
+    const float  Kp_strm3_forward = 0.48 ;                        //Proportionality constant for the angular error for motor 3
 
     float error_encoder_forward;
     float pwm_encoder_forward;
@@ -53,9 +55,9 @@ class Manual
 
     /*** backwardManY() Function Variables ***/
     float error_back;
-    const int Kp_encoder_back = 0.068;
-    const int Kp_strm2_back = 0.25;
-    const int Kp_strm3_back = 0.25;
+    const float Kp_encoder_back = 0.068;
+    const float Kp_strm2_back = 0.25;
+    const float Kp_strm3_back = 0.25;
 
     float error_encoder_back;
     float pwm_encoder_back;
@@ -63,10 +65,10 @@ class Manual
 
     /***** leftManX() Function Variables *****/
     float error_left;                                     //Variable to store the value of the X encoder as error.
-    const int Kp_encoder_left = 0.02;
-    const int Kp_strm1_left = 0.4;
-    const int Kp_strm2_left = 0.6;
-    const int Kp_strm3_left = 0.6;
+    const float Kp_encoder_left = 0.02;
+    const float Kp_strm1_left = 0.4;
+    const float Kp_strm2_left = 0.6;
+    const float Kp_strm3_left = 0.6;
 
     float error_encoder_left;
     float pwm_encoder_left;
@@ -74,14 +76,36 @@ class Manual
 
     /***** rightManX() Function Variables *****/
     float error_right;
-    const int Kp_encoder_right = 0.03;
-    const int Kp_strm1_right = 0.4;
-    const int Kp_strm2_right = 0.4;
-    const int Kp_strm3_right = 0.45;
+    const float Kp_encoder_right = 0.03;
+    const float Kp_strm1_right = 0.4;
+    const float Kp_strm2_right = 0.4;
+    const float Kp_strm3_right = 0.45;
 
     float error_encoder_right;
     float pwm_encoder_right;
     float error_sum_right;
+
+    int final_ang = 0, correction_angle = 0;
+    //PWM Given to motors for rotating
+    float pwmm_ori;
+
+    //PWM Values given to each wheel
+    int pwmm_ori1, pwmm_ori2, pwmm_ori3;
+
+    //Variables used for PID
+    float req_angle = 0.0;
+    float error_ang = 3;
+
+    //Variables required to keep track of future and past
+    float rate_change = 5;
+    float error_sum_ori;
+    float prev_error = 0;
+
+    //PID Constants
+    const float kp_ori = 2.75;
+    const float ki_ang = 0.000;
+
+
 };
 
 
@@ -335,7 +359,164 @@ void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right
   Serial.println(pwmm3);
   Serial.print("\tBasepwm: ");
   Serial.print(basePwm);
+ }
 
-}
+  /*  Function Name       : M_TurnTillPressed()
+      Input               : Required angle(req_ang) for which function is to be executed and  Proportionality constants(KP_Orient, KI_Angle)
+      Output              : Bot orients as per given required angle(req_angle).
+      Logic               : Bot orients at desired or required angle from initial position, all motors are given equal pwm until it acquires desired angle.
+      Example Call        : M_TurnTillPressed(1);
+  */
+  void Manual :: TTP_Man(int dir)
+  {
+    if (dir == 1)
+    {
+      dirW1 = 1;
+      dirW2 = 0;
+      dirW3 = 1;
+    }
+    else if (dir == 0)
+    {
+      dirW1 = 0;
+      dirW2 = 1;
+      dirW3 = 0;
+    }
+
+    Motor M1(34, dirW1, 9);
+    Motor M2(28, dirW2, 6);
+    Motor M3(30, dirW3, 7);
+
+    pwmm_ori = 50;
+
+
+    /********************************************* SERIAL PRINTING DATA ***************************************************/
+    /*
+       Serial.print("Yaw: ");
+       Serial.print(Yaw);
+       Serial.print("\tError: ");
+       Serial.print(error_ang);
+       Serial.print("\tKp:  ");
+       Serial.print(kp_ori);
+       Serial.print("\tPWM:  ");
+       Serial.print(pwmm_ori);
+       Serial.print("\trate:  ");
+       Serial.println(rate_change);
+       Serial.print("\tprevious:  ");
+       Serial.println(prev_error);
+    */
+
+    pwmm_ori1 = pwmm_ori;
+    pwmm_ori2 = pwmm_ori;
+    pwmm_ori3 = pwmm_ori;
+
+    M1.SetDirection();
+    M2.SetDirection();
+    M3.SetDirection();
+
+
+    M1.SetSpeed(pwmm_ori1);
+    M2.SetSpeed(pwmm_ori2);
+    M3.SetSpeed(pwmm_ori3);
+  }
+
+  /*  Function Name       : M_Turn()
+      Input               : Required angle(req_ang) for which function is to be executed and  Proportionality constants(KP_Orient, KI_Angle)
+      Output              : Bot orients as per given required angle(req_angle).
+      Logic               : Bot orients at desired or required angle from initial position, all motors are given equal pwm until it acquires desired angle.
+      Example Call        : M_Turn(KP_Orient, KI_Angle, 338.00);
+  */
+  void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
+  {
+    error_ang = 5;
+    while (rate_change != 0 || abs(error_ang) > 2)
+    {
+      // read from port 1, send to port 0:
+      Yaw = V.readMpu();
+
+      final_ang  = pow(-1, !dir) * req_angle + Shifted_Yaw ;
+      final_ang += ((final_ang < - 180) - (final_ang > 180)) * 360 ;
+
+      error_ang = final_ang - Yaw ;
+      error_ang += ((error_ang < -180) - (error_ang > 180)) * 360 ;
+
+      rate_change = abs(error_ang) - abs(prev_error);
+
+      if (dir)
+      {
+        dirW1 = 1;
+        dirW2 = 0;
+        dirW3 = 1;
+      }
+      else
+      {
+        dirW1 = 0;
+        dirW2 = 1;
+        dirW3 = 0;
+      }
+
+      error_sum_ori = error_sum_ori + error_ang;
+
+      if ((rate_change) > 0)
+      {
+        dirW1 = !(dirW1);
+        dirW2 = !(dirW2);
+        dirW3 = !(dirW3);
+      }
+
+      Motor M1(34, dirW1, 9);
+      Motor M2(28, dirW2, 6);
+      Motor M3(30, dirW3, 7);
+
+      pwmm_ori = abs(error_ang) * KP_Orient;
+
+      if (abs(error_ang) < 20)
+      {
+        pwmm_ori += (KI_Angle * error_sum_ori);
+      }
+
+      if (pwmm_ori > (Maxpwm / 3))
+        pwmm_ori = (Maxpwm / 3);
+
+
+      /********************************************* SERIAL PRINTING DATA ***************************************************/
+
+      Serial.print("\tYaw: ");
+      Serial.print(Yaw);
+      Serial.print("\tError: ");
+      Serial.print(error_ang);
+      Serial.print("\tFinal: ");
+      Serial.print(final_ang);
+      Serial.print("\tKp:  ");
+      Serial.print(KP_Orient);
+      Serial.print("\tPWM:  ");
+      Serial.print(pwmm_ori);
+      Serial.print("\trate:  ");
+      Serial.print(rate_change);
+      Serial.print("\tprevious:  ");
+      Serial.print(prev_error);
+      Serial.print("\tdir:  ");
+      Serial.println(dir);
+
+
+      pwmm_ori1 = pwmm_ori;
+      pwmm_ori2 = pwmm_ori;
+      pwmm_ori3 = pwmm_ori;
+
+      M1.SetDirection();
+      M2.SetDirection();
+      M3.SetDirection();
+
+      M1.SetSpeed(pwmm_ori1);
+      M2.SetSpeed(pwmm_ori2);
+      M3.SetSpeed(pwmm_ori3);
+
+      prev_error = error_ang;
+    }
+    M1.SetSpeed(0);
+    M2.SetSpeed(0);
+    M3.SetSpeed(0);
+
+  }
+
 
 #endif

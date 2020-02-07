@@ -88,17 +88,37 @@ void loop()
       break;
 
     case 's':
-      analogWrite(A.pwmm1, 0);
-      analogWrite(A.pwmm2, 0);
-      analogWrite(A.pwmm3, 0);
-
+      M1.SetSpeed(0);
+      M2.SetSpeed(0);
+      M3.SetSpeed(0);
       Serial.println("In s");
       break;
 
+      case 'g':
+      A.TurnMan(A.kp_ori, A.ki_ang, 15.00, 0);
+      reset();
+      break;
+
+    case 'p':
+      A.TurnMan(A.kp_ori, A.ki_ang, 15.00, 1);
+      reset();
+      break;
+
+    case 'c':
+      A.TTP_Man(0);
+
+      break;
+
+    case 'd':
+      A.TTP_Man(1);
+
+      break;
+
+
     default:
-      analogWrite(A.pwmm1, 0);
-      analogWrite(A.pwmm2, 0);
-      analogWrite(A.pwmm3, 0);
+      M1.SetSpeed(0);
+      M2.SetSpeed(0);
+      M3.SetSpeed(0);
 
       Serial.println("In Default");
   }
