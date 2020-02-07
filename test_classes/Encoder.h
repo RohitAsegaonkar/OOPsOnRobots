@@ -11,7 +11,10 @@ class Encoder
     public:
     /******* Variables for the encoder *******/
     volatile int encodervalue;                                                // Count of pulses from encoder 1 and encoder 2
-
+    Encoder()
+    {
+      
+    }
     Encoder(int EP1, int CP1)
     {
         encoderPin = EP1;

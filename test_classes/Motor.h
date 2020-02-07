@@ -16,7 +16,15 @@ class Motor
     int _PWM_Pin;
     int _PWM;
 
+    
+
     public:
+
+    Motor()
+    {
+      
+    }
+    
     Motor(int _DirPin_, bool _Dir_, int _PWM_Pin_)
     {
         _DirPin = _DirPin_;
@@ -48,5 +56,6 @@ void Motor::SetDirection()
 void Motor::SetSpeed(int _PWM)
 {
     analogWrite(_PWM_Pin,_PWM);
+    Serial.print(_PWM_Pin);
 }
 #endif
