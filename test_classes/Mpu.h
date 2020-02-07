@@ -1,5 +1,5 @@
-#ifndef _Mpu_
-#define _Mpu_
+#ifndef _Mpu_H_
+#define _Mpu_H_
 
 class Mpu
 {
@@ -7,17 +7,17 @@ private:
     /* data */
 public:
     Mpu(/* args */);
-    int readMpu(int s = 3);
+    int readMpu(int s);
 };
 
 Mpu::Mpu(/* args */)
 {
 }
 
-int Mpu::readMpu(int s = 3)
+int Mpu::readMpu(int s=3)
 {
     int8_t yaw;
-    int Yaw;
+    int _Yaw;
 
     switch (s) 
     {
@@ -28,9 +28,9 @@ int Mpu::readMpu(int s = 3)
                 yaw = Serial1.read();
             }
 
-            Yaw = yaw * (180.00 / 127.00);
-            
-            return Yaw;    
+            _Yaw = yaw * (180.00 / 127.00);
+
+            return _Yaw;    
 
             break;
         } 
@@ -42,9 +42,9 @@ int Mpu::readMpu(int s = 3)
                 yaw = Serial2.read();
             }
 
-            Yaw = yaw * (180.00 / 127.00);
-            
-            return Yaw;    
+            _Yaw = yaw * (180.00 / 127.00);
+
+            return _Yaw;    
 
             break;
         }        
@@ -55,9 +55,9 @@ int Mpu::readMpu(int s = 3)
                 yaw = Serial3.read();
             }
 
-            Yaw = yaw * (180.00 / 127.00);
+            _Yaw = yaw * (180.00 / 127.00);
 
-            return Yaw;    
+            return _Yaw;    
 
             break;
         }

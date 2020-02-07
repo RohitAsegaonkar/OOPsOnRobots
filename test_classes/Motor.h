@@ -1,12 +1,13 @@
 /* Filename                 : Motor.h
- * Name of Class            :Motor
- * Name of Methods          :SetDirection(),ToggleDirction(),SetSpeed();
+ * Name of Class            : Motor
+ * Name of Methods          : SetDirection(),ToggleDirction(),SetSpeed();
  * Name of Member Variables :
  *
  */
 
-#ifndef _Motor_
-#define _Motor_
+#ifndef _Motor_H_
+#define _Motor_H_
+
 class Motor
 {
     private:
@@ -47,6 +48,5 @@ void Motor::SetDirection()
 void Motor::SetSpeed(int _PWM)
 {
     analogWrite(_PWM_Pin,_PWM);
-    
 }
 #endif

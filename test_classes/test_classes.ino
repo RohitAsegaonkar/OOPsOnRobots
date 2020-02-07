@@ -3,15 +3,14 @@
 #include "Motor.h"
 #include "Manual.h"
 
-    Manual A;
-    Encoder X(21,50);
-    Encoder Y(2,52);
-    Mpu V();
-    Motor M1(34,A.dirW1,9);
-    Motor M2(28,A.dirW2,6);
-    Motor M3(30,A.dirW3,7);
-    
-  
+  Manual A;
+  Encoder X(21,50);
+  Encoder Y(2,52);
+  Mpu V;
+  Motor M1(34,A.dirW1,9);
+  Motor M2(28,A.dirW2,6);
+  Motor M3(30,A.dirW3,7);
+
 void UpdateXEncoder()
 {
   X.updateEncoder();
@@ -30,10 +29,10 @@ void reset()
 {
   Y.encodervalue = 0;
   X.encodervalue = 0;
-  A.Yaw = V().readMpu();
+  A.Yaw = V.readMpu();
   A.Shifted_Yaw = A.Yaw;
   Serial.println("In Reset");
-  Serial.println(Manual().Shifted_Yaw);
+  Serial.println(A.Shifted_Yaw);
   A.pwmm1 = 0;
   A.pwmm2 = 0;
   A.pwmm3 = 0;

@@ -1,5 +1,5 @@
-#ifndef _Manual_
-#define _Manual_
+#ifndef _Manual_H_
+#define _Manual_H_
 
 #include "Encoder.h"
 #include "Mpu.h"
@@ -7,76 +7,82 @@
 
 class Manual
 {
-private:
-    /*** forwardManY() Function Variables ***/
-float error_forward;                                 //Variable to store the value of the X encoder as error.
-#define Kp_encoder_forward 0.0                       //Proportionality constant for the lateral error
-#define Kp_strm2_forward  0.48                       //Proportionality constant for the angular error for motor 2
-#define p_strm3_forward  0.48                        //Proportionality constant for the angular error for motor 3
+    private:
+        /*** forwardManY() Function Variables ***/
+    float error_forward;                                 //Variable to store the value of the X encoder as error.
+    #define Kp_encoder_forward 0.0                       //Proportionality constant for the lateral error
+    #define Kp_strm2_forward  0.48                       //Proportionality constant for the angular error for motor 2
+    #define p_strm3_forward  0.48                        //Proportionality constant for the angular error for motor 3
 
-float error_encoder_forward;
-float pwm_encoder_forward;
-float error_sum_forward;
+    float error_encoder_forward;
+    float pwm_encoder_forward;
+    float error_sum_forward;
 
-/*** backwardManY() Function Variables ***/
-float error_back;
-#define kp_encoder_back 0.068
-#define kp_strm2_back 0.25
-#define kp_strm3_back 0.25
+    /*** backwardManY() Function Variables ***/
+    float error_back;
+    #define kp_encoder_back 0.068
+    #define kp_strm2_back 0.25
+    #define kp_strm3_back 0.25
 
-float error_encoder_back;
-float pwm_encoder_back;
-float error_sum_back;
+    float error_encoder_back;
+    float pwm_encoder_back;
+    float error_sum_back;
 
-/***** leftManX() Function Variables *****/
-float error_left;                                     //Variable to store the value of the X encoder as error.
-#define kp_encoder_left 0.02
-#define kp_strm1_left 0.4
-#define kp_strm2_left 0.6
-#define kp_strm3_left 0.6
+    /***** leftManX() Function Variables *****/
+    float error_left;                                     //Variable to store the value of the X encoder as error.
+    #define kp_encoder_left 0.02
+    #define kp_strm1_left 0.4
+    #define kp_strm2_left 0.6
+    #define kp_strm3_left 0.6
 
-float error_encoder_left;
-float pwm_encoder_left;
-float error_sum_left;
+    float error_encoder_left;
+    float pwm_encoder_left;
+    float error_sum_left;
 
-/***** rightManX() Function Variables *****/
-float error_right;
-#define kp_encoder_right 0.03
-#define kp_strm1_right 0.4
-#define kp_strm2_right 0.4
-#define kp_strm3_right 0.45
+    /***** rightManX() Function Variables *****/
+    float error_right;
+    #define kp_encoder_right 0.03
+    #define kp_strm1_right 0.4
+    #define kp_strm2_right 0.4
+    #define kp_strm3_right 0.45
 
-float error_encoder_right;
-float pwm_encoder_right;
-float error_sum_right;
+    float error_encoder_right;
+    float pwm_encoder_right;
+    float error_sum_right;
 
-public:
-    Manual(/* args */);
-  //Boolean Variables to set direction of Wheels
-    bool dirW1 = HIGH;
-    bool dirW2 = HIGH;
-    bool dirW3 = HIGH;
-    int Yaw = 0;                                          //Variable to store the resolved value of yaw from -180 to 180
-    float Shifted_Yaw = 0;
-    /************ PWM Values ************/
-    #define Maxpwm 150.00
-    #define basePwm 100
-    int pwmm1, pwmm2, pwmm3;
+    public:
+        Manual(/* args */);
+        //Boolean Variables to set direction of Wheels
+        bool dirW1 ;
+        bool dirW2 ;
+        bool dirW3 ;
+        int Yaw;                                          //Variable to store the resolved value of yaw from -180 to 180
+        float Shifted_Yaw;
+
+        /************ PWM Values ************/
+        #define Maxpwm 150.00
+        #define basePwm 100
+        int pwmm1, pwmm2, pwmm3;
+
         /************************ Objects Created *********************************/
-    Encoder X(21,50);
-    Encoder Y(2,52);
-    Mpu V();
-    Motor M1(34,dirW1,9);
-    Motor M2(28,dirW2,6);
-    Motor M3(30,dirW3,7);
-    void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward);
-    void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
-    void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left);
-    void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right);
+        Encoder X;
+        Encoder Y;
+        Mpu V;
+        //Motor M1(34, dirW1, 9);
+        //Motor M2(28, dirW2, 6);
+        //Motor M3(30, dirW3, 7);
+        Motor M1, M2, M3;
+
+        void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward);
+        void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
+        void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left);
+        void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right);
 };
 
 Manual::Manual(/* args */)
 {
+    Yaw = 0;
+    Shifted_Yaw = 0;
 }
 
 /*
