@@ -95,12 +95,12 @@ void loop()
       break;
 
       case 'g':
-      A.TurnMan(A.kp_ori, A.ki_ang, 15.00, 0);
+      A.TurnMan(kp_ori, ki_ang, 15.00, 0);
       reset();
       break;
 
     case 'p':
-      A.TurnMan(A.kp_ori, A.ki_ang, 15.00, 1);
+      A.TurnMan(kp_ori, ki_ang, 15.00, 1);
       reset();
       break;
 
