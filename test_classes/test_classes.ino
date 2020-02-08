@@ -68,7 +68,7 @@ void loop()
     case 'B':
       A.backwardManY(A.Kp_strm2_back, A.Kp_strm3_back, A.Kp_encoder_back);
       Serial.println("In B");
-      break;
+      break;   
 
     case 'L':
       A.leftManX(A.Kp_strm1_left,A.Kp_strm2_left, A.Kp_strm3_left, A.Kp_encoder_left);
@@ -95,12 +95,12 @@ void loop()
       break;
 
       case 'g':
-      A.TurnMan(kp_ori, ki_ang, 15.00, 0);
+      A.TurnMan(A.kp_ori, A.ki_ang, 15.00, 0);
       reset();
       break;
 
     case 'p':
-      A.TurnMan(kp_ori, ki_ang, 15.00, 1);
+      A.TurnMan(A.kp_ori, A.ki_ang, 15.00, 1);
       reset();
       break;
 
