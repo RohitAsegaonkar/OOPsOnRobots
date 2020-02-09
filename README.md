@@ -19,7 +19,7 @@ Class piston is used to represent a piston.<br>
 ### Creating a object of class piston
 Meaning of patameters:
  - **Extension_Pin**    - Pin which is given high to extend the piston.
- - **Retraction_Pin**   - Pin which is given low to retract the piston.
+ - **Retraction_Pin**   - Pin which is given high to retract the piston.
 
 ```cpp
 Piston P1(int Extension_Pin, int Retraction_Pin);
