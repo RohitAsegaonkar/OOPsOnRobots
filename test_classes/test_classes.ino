@@ -43,6 +43,11 @@ void setup()
   Serial.begin(115200);
   Serial1.begin(115200);
   Serial3.begin(115200);
+  pinMode(42,OUTPUT);
+  pinMode(44,OUTPUT);
+  pinMode(46,OUTPUT);
+  pinMode(48,OUTPUT);
+  
 }
 
 void loop()
@@ -84,6 +89,10 @@ void loop()
       M1.SetSpeed(0);
       M2.SetSpeed(0);
       M3.SetSpeed(0);
+      digitalWrite(37,0);
+      digitalWrite(39,0);
+      digitalWrite(35,0);
+      digitalWrite(41,0);
       Serial.println("In s");
       break;
 
@@ -91,6 +100,10 @@ void loop()
       M1.SetSpeed(0);
       M2.SetSpeed(0);
       M3.SetSpeed(0);
+      digitalWrite(37,0);
+      digitalWrite(39,0);
+      digitalWrite(35,0);
+      digitalWrite(41,0);
       Serial.println("In s");
       break;
 
@@ -113,12 +126,26 @@ void loop()
       A.TTP_Man(1);
 
       break;
-
+    case 'y':
+      digitalWrite(37,1);
+      break;
+    case 'b':
+      digitalWrite(39,1);
+      break;
+    case 'a':
+      digitalWrite(35,1);
+      break;
+    case 'x':
+      digitalWrite(41,1);
+      break;
+            
 
     default:
       M1.SetSpeed(0);
       M2.SetSpeed(0);
       M3.SetSpeed(0);
+
+      
 
       Serial.println("In Default");
   }
