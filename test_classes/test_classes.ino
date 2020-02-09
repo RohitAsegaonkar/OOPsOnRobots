@@ -2,6 +2,7 @@
 #include "Mpu.h"
 #include "Motor.h"
 #include "Manual.h"
+#include "Piston.h"
 
 Manual A;
 Encoder X(21, 50);
@@ -10,6 +11,7 @@ Mpu V;
 Motor M1(34, A.dirW1, 9);
 Motor M2(28, A.dirW2, 6);
 Motor M3(30, A.dirW3, 7);
+Piston Gripper(41, 39), Throwing(37, 35);
 
 void UpdateXEncoder()
 {
@@ -119,26 +121,27 @@ void loop()
 
     case 'c':
       A.TTP_Man(0);
-
       break;
 
     case 'd':
       A.TTP_Man(1);
+      break;
 
-      break;
     case 'y':
-      digitalWrite(37,1);
+      Throwing.Extend();
       break;
-    case 'b':
-      digitalWrite(39,1);
-      break;
+
     case 'a':
-      digitalWrite(35,1);
+      Throwing.Retract();
       break;
+
+    case 'b':
+      Gripper.Retract();
+      break;
+
     case 'x':
-      digitalWrite(41,1);
+      Gripper.Extend();
       break;
-            
 
     default:
       M1.SetSpeed(0);
