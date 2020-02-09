@@ -13,7 +13,7 @@ class Encoder
     volatile int encodervalue;                                                // Count of pulses from encoder 1 and encoder 2
     Encoder()
     {
-      
+
     }
     Encoder(int EP1, int CP1)
     {

@@ -181,13 +181,13 @@ void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float
 
 
 /*
-    Function Name    : backwardManY()
-    Input            : Required distance(requiredDistance_back) for which function is to be executed,Proportionality constants of Each Motors(kp_strm1_back,KP_M2_Backward,KP_M3_Backward),
-                       Encoders(KP_Enc_Backward) and Distance constant(kp_dist_back,ki_dist_back)
-    Output           : Motor 2 and 3 will move with same pwm and Motor 1 will have zero PWM. Bot will move in back Direction(along Motor 1 backward).
-    Logic            : By giving same PWM to Motors 2 and 3 and Motor 1 will have zero PWM,the bot will move in backward direction. MPU and two XY Encoders are used for FEEDBACK of System.
-                       PID is implemented for precise movement.
-    Example Call     : backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
+    Function Name    :  backwardManY()
+    Input            :  Required distance(requiredDistance_back) for which function is to be executed,Proportionality constants of Each Motors(kp_strm1_back,KP_M2_Backward,KP_M3_Backward),
+                        Encoders(KP_Enc_Backward) and Distance constant(kp_dist_back,ki_dist_back)
+    Output           :  Motor 2 and 3 will move with same pwm and Motor 1 will have zero PWM. Bot will move in back Direction(along Motor 1 backward).
+    Logic            :  By giving same PWM to Motors 2 and 3 and Motor 1 will have zero PWM,the bot will move in backward direction. MPU and two XY Encoders are used for FEEDBACK of System.
+                        PID is implemented for precise movement.
+    Example Call     :  backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
 */
 void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward)
 {
@@ -302,13 +302,13 @@ void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, fl
 
 }
 /*
-    Function Name        : rightManX()
-    Input                : Required distance(requiredDistance_right) for which function is to be executed,Proportionality constants of Each Motors(KP_M1_Right,KP_M2_Right,KP_M3_Right),
-                           Encoders(KP_Enc_Right) and Distance constant(kp_dist_right,ki_dist_right)
-    Output               : Motor 2 and 3 will move with same pwm and Motor 1 will move with double the pwm of rest two Motors. Bot will move in Right Direction.
-    Logic                : By giving same PWM to Motors 2 and 3 and giving double PWM to Motor 1,the bot will move in right direction. MPU and two XY Encoders are used for FEEDBACK of System.
-                           PID is implemented for precise movement.
-    Example Call         : rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right);
+    Function Name        :  rightManX()
+    Input                :  Required distance(requiredDistance_right) for which function is to be executed,Proportionality constants of Each Motors(KP_M1_Right,KP_M2_Right,KP_M3_Right),
+                            Encoders(KP_Enc_Right) and Distance constant(kp_dist_right,ki_dist_right)
+    Output               :  Motor 2 and 3 will move with same pwm and Motor 1 will move with double the pwm of rest two Motors. Bot will move in Right Direction.
+    Logic                :  By giving same PWM to Motors 2 and 3 and giving double PWM to Motor 1,the bot will move in right direction. MPU and two XY Encoders are used for FEEDBACK of System.
+                            PID is implemented for precise movement.
+    Example Call         :  rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right);
 */
 void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right)
 {
@@ -391,18 +391,18 @@ void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right
 
     /********************************************* SERIAL PRINTING DATA ***************************************************/
     /*
-       Serial.print("Yaw: ");
-       Serial.print(Yaw);
-       Serial.print("\tError: ");
-       Serial.print(error_ang);
-       Serial.print("\tKp:  ");
-       Serial.print(kp_ori);
-       Serial.print("\tPWM:  ");
-       Serial.print(pwmm_ori);
-       Serial.print("\trate:  ");
-       Serial.println(rate_change);
-       Serial.print("\tprevious:  ");
-       Serial.println(prev_error);
+      Serial.print("Yaw: ");
+      Serial.print(Yaw);
+      Serial.print("\tError: ");
+      Serial.print(error_ang);
+      Serial.print("\tKp:  ");
+      Serial.print(kp_ori);
+      Serial.print("\tPWM:  ");
+      Serial.print(pwmm_ori);
+      Serial.print("\trate:  ");
+      Serial.println(rate_change);
+      Serial.print("\tprevious:  ");
+      Serial.println(prev_error);
     */
 
     pwmm_ori1 = pwmm_ori;
