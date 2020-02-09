@@ -22,7 +22,7 @@ class Motor
 
     Motor()
     {
-      
+
     }
     
     Motor(int _DirPin_, bool _Dir_, int _PWM_Pin_)

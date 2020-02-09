@@ -1,3 +1,10 @@
+/* Filename                 : Mpu.h
+ * Name of Class            : Mpu
+ * Name of Methods          : readMpu()
+ * Name of Member Variables : 
+ *
+ */
+
 #ifndef _Mpu_H_
 #define _Mpu_H_
 
