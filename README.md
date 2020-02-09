@@ -2,7 +2,6 @@
 Classes and objects implementation.
 
 ## Class Piston
---------------------------------
 Class piston is used to represent a piston.<br>
 
 #### Member Variables:
