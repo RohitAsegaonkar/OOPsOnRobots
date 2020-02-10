@@ -13,6 +13,8 @@ Motor M2(28, A.dirW2, 6);
 Motor M3(30, A.dirW3, 7);
 Piston Gripper(41, 39), Throwing(37, 35);
 
+int Piston_Press_Event = 0;
+
 void UpdateXEncoder()
 {
   X.updateEncoder();
@@ -128,19 +130,47 @@ void loop()
       break;
 
     case 'y':
-      Throwing.Extend();
+      Piston_Press_Event++;
+      Piston_Press_Event=%3;
+      if(Piston_Press_Event == 1)
+      {
+        Gripper.Extend();
+      }
+      if(Piston_Press_Event == 2)
+      {
+        Throwing.Extend();
+      }
+      if(Piston_Press_Event == 3)
+      {
+        Throwing.Retract();
+        Gripper.Retract();   
+      }
       break;
 
     case 'a':
-      Throwing.Retract();
+      Piston_Press_Event--;
+      Piston_Press_Event=%3;
+      if(Piston_Press_Event == 1)
+      {
+        Gripper.Extend();
+      }
+      if(Piston_Press_Event == 2)
+      {
+        Throwing.Extend();
+      }
+      if(Piston_Press_Event == 3)
+      {
+        Throwing.Retract();
+        Gripper.Retract();   
+      }
       break;
 
     case 'b':
-      Gripper.Retract();
+      //Gripper.Retract();
       break;
 
     case 'x':
-      Gripper.Extend();
+      //Gripper.Extend();
       break;
 
     default:
