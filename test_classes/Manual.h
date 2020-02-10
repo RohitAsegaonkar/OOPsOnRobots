@@ -105,14 +105,13 @@ class Manual
     const float kp_ori = 2.75;
     const float ki_ang = 0.000;
 
-
 };
 
 
 Manual::Manual(/* args */)
 {
   Yaw = 0;
-  Shifted_Yaw = 0;
+  Shifted_Yaw = 0.00;
 }
 
 /*

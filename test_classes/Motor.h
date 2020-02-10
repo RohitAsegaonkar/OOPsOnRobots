@@ -56,6 +56,6 @@ void Motor::SetDirection()
 void Motor::SetSpeed(int _PWM)
 {
     analogWrite(_PWM_Pin,_PWM);
-    Serial.print(_PWM_Pin);
+    //Serial.print(_PWM_Pin);
 }
 #endif

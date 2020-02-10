@@ -130,11 +130,11 @@ void loop()
       break;
 
     case 'y':
-      Piston_Press_Event++;
-      Piston_Press_Event=%3;
+      /*Piston_Press_Event++;
+      Piston_Press_Event %= 3;
       if(Piston_Press_Event == 1)
       {
-        Gripper.Extend();
+        Gripper.Retract(); 
       }
       if(Piston_Press_Event == 2)
       {
@@ -143,13 +143,13 @@ void loop()
       if(Piston_Press_Event == 3)
       {
         Throwing.Retract();
-        Gripper.Retract();   
-      }
+        Gripper.Extend();
+      }*/
       break;
-
-    case 'a':
+     
+    /*case 'a':
       Piston_Press_Event--;
-      Piston_Press_Event=%3;
+      Piston_Press_Event %= 3;
       if(Piston_Press_Event == 1)
       {
         Gripper.Extend();
@@ -164,7 +164,7 @@ void loop()
         Gripper.Retract();   
       }
       break;
-
+*/
     case 'b':
       //Gripper.Retract();
       break;
