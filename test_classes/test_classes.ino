@@ -71,7 +71,7 @@ void loop()
   {
     case 'F':
       A.forwardManY(A.Kp_strm2_forward, A.Kp_strm3_forward, A.Kp_encoder_forward);
-     Serial.println("In F");
+      Serial.println("In F");
       break;
 
     case 'B':
@@ -97,7 +97,7 @@ void loop()
       digitalWrite(39,0);
       digitalWrite(35,0);
       digitalWrite(41,0);
-     Serial.println("In s");
+      Serial.println("In s");
       break;
 
     case 's':
@@ -108,7 +108,7 @@ void loop()
       digitalWrite(39,0);
       digitalWrite(35,0);
       digitalWrite(41,0);
-     Serial.println("In s");
+      Serial.println("In s");
       break;
 
       case 'g':
@@ -130,9 +130,10 @@ void loop()
       break;
 
     case 'y':
-     if (prevCommand =='S') {
+    if (prevCommand =='S') 
+    {
       Piston_Press_Event++;
-     }
+    }
       Piston_Press_Event %= 3;
       if(Piston_Press_Event == 0)
       {
@@ -153,12 +154,13 @@ void loop()
         Serial.print("Piston_Press_Event:");
         Serial.println(Piston_Press_Event);
       }
-      break;
-     
-     case 'a':
-      if (prevCommand =='S') {
+    break;
+    
+    case 'a':
+    if (prevCommand =='S') 
+    {
       Piston_Press_Event--;
-     } 
+    } 
       Piston_Press_Event %= 3;
       if(Piston_Press_Event == 0)
       {
@@ -179,7 +181,7 @@ void loop()
         Serial.print("Piston_Press_Event:");
         Serial.println(Piston_Press_Event);  
       }
-     
+    
       break;
 
     case 'b':
