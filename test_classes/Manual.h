@@ -17,8 +17,8 @@ class Manual
     bool dirW1 = 0 ;
     bool dirW2 ;
     bool dirW3 ;
-    int Yaw;                                          //Variable to store the resolved value of yaw from -180 to 180
-    float Shifted_Yaw;
+    float Yaw = 0;                                          //Variable to store the resolved value of yaw from -180 to 180
+    float Shifted_Yaw = 0;
 
     /************ PWM Values ************/
 #define Maxpwm 150.00
@@ -130,7 +130,7 @@ void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float
   Motor M3(30, 1, 7);
 
   Serial.println("In F");
-  Yaw = V.readMpu();                          // Reading Mpu Values
+  Yaw = V.readMpu(3);                          // Reading Mpu Values
   error_forward = Yaw - Shifted_Yaw;
 
   error_encoder_forward = X.encodervalue;
@@ -163,6 +163,8 @@ void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float
 
   Serial.print("\tYaw: ");
   Serial.print(Yaw);
+  Serial.print("\tShifted Yaw: ");
+  Serial.print(Shifted_Yaw);
   Serial.print("\tError: ");
   Serial.print(error_forward);
   Serial.print("\tError encoder: ");
@@ -195,7 +197,7 @@ void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP
   Motor M2(28, 0, 6);
   Motor M3(30, 0, 7);
 
-  Yaw = V.readMpu();                         // Reading Mpu Values
+  Yaw = V.readMpu(3);                         // Reading Mpu Values
   error_back = Yaw - Shifted_Yaw;
 
   error_encoder_back = X.encodervalue;
@@ -252,7 +254,7 @@ void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, fl
   Motor M2(28, 1, 6);
   Motor M3(30, 0, 7);
 
-  Yaw = V.readMpu();
+  Yaw = V.readMpu(3);
   error_left = Yaw - Shifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function                       //Calculating the basepwm in proportion with the error
 
   error_encoder_left = Y.encodervalue;                                            //Error for locomotion in X direction is given by the y encoder
@@ -314,7 +316,7 @@ void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right
   Motor M1(34, 0, 9);
   Motor M2(28, 0, 6);
   Motor M3(30, 1, 7);
-  Yaw = V.readMpu();
+  Yaw = V.readMpu(3);
 
   error_encoder_right = Y.encodervalue;
   pwm_encoder_right = KP_Enc_Right * (error_encoder_right);
@@ -430,7 +432,7 @@ void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right
     while (rate_change != 0 || abs(error_ang) > 2)
     {
       // read from port 1, send to port 0:
-      Yaw = V.readMpu();
+      Yaw = V.readMpu(3);
 
       final_ang  = pow(-1, !dir) * req_angle + Shifted_Yaw ;
       final_ang += ((final_ang < - 180) - (final_ang > 180)) * 360 ;

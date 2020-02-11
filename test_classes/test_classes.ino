@@ -1,4 +1,4 @@
-#include "Encoder.h"
+  #include "Encoder.h"
 #include "Mpu.h"
 #include "Motor.h"
 #include "Manual.h"
@@ -33,7 +33,7 @@ void reset()
 {
   Y.encodervalue = 0;
   X.encodervalue = 0;
-  A.Yaw = V.readMpu();
+  A.Yaw = V.readMpu(3);
   A.Shifted_Yaw = A.Yaw;
   Serial.println("In Reset");
   Serial.println(A.Shifted_Yaw);

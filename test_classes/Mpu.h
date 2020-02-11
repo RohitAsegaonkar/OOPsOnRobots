@@ -6,7 +6,7 @@
  */
 
 #ifndef _Mpu_H_
-#define _Mpu_H_
+#define _Mpu_H_s
 
 class Mpu
 {
@@ -14,19 +14,30 @@ private:
     /* data */
 public:
     Mpu(/* args */);
-    int readMpu(int s);
+    float readMpu(int s);
+    int8_t yaw = 0;
+    float _Yaw;
 };
 
 Mpu::Mpu(/* args */)
 {
+   yaw = 0;
+   _Yaw = 0;
 }
 
-int Mpu::readMpu(int s=3)
+float Mpu::readMpu(int s)
 {
-    int8_t yaw;
-    int _Yaw;
+    
+                if (Serial3.available())
+            {
+                yaw = Serial3.read();
+            }
 
-    switch (s) 
+            _Yaw = yaw * (180.00 / 127.00);
+
+            return _Yaw;    
+
+   /* switch (s) 
     {
         case 1:
         {
@@ -69,6 +80,6 @@ int Mpu::readMpu(int s=3)
             break;
         }
 
-    }
+    }*/
 }
 #endif
