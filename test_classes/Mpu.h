@@ -6,7 +6,7 @@
  */
 
 #ifndef _Mpu_H_
-#define _Mpu_H_s
+#define _Mpu_H_
 
 class Mpu
 {
@@ -19,7 +19,7 @@ public:
     float _Yaw;
 };
 
-Mpu::Mpu(/* args */)
+ Mpu::Mpu(/* args */)
 {
    yaw = 0;
    _Yaw = 0;
