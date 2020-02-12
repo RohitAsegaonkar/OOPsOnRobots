@@ -170,13 +170,13 @@ void loop()
       }
       if(Piston_Press_Event == 1)
       {
-        Throwing.Extend();
+        Throwing.Retract();
         Serial.print("Piston_Press_Event:");
         Serial.println(Piston_Press_Event);
       }
       if(Piston_Press_Event == 2)
       {
-        Throwing.Retract();
+        Throwing.Extend();
         Gripper.Retract(); 
         Serial.print("Piston_Press_Event:");
         Serial.println(Piston_Press_Event);  
