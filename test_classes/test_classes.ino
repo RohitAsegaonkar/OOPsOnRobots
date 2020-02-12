@@ -121,11 +121,11 @@ void loop()
       reset();
       break;
 
-    case 'c':
+    case 'd':
       A.TTP_Man(0);
       break;
 
-    case 'd':
+    case 'c':
       A.TTP_Man(1);
       break;
 
