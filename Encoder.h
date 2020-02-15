@@ -1,3 +1,6 @@
+#ifndef _Encoder_H_
+#define _Encoder_H_
+
 class Encoder
 {
     public:
@@ -34,3 +37,4 @@ void updateEncoder()
     volatile int a, b;
     int encoderPin , comparePin; 
 };
+#endif

@@ -126,12 +126,12 @@ Manual::Manual(/* args */)
 */
 void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward)
 {
-  Motor M1(34, 1, 9);
-  Motor M2(28, 1, 6);
-  Motor M3(30, 1, 7);
+  Motor M1(26, 1, 6);
+  Motor M2(38, 1, 12);
+  Motor M3(36, 1, 11);
 
   Serial.println("In F");
-  Yaw = V.readMpu(3);                          // Reading Mpu Values
+  Yaw = V.readMpu(2);                          // Reading Mpu Values
   error_forward = Yaw - Shifted_Yaw;
 
   error_encoder_forward = X.encodervalue;
@@ -194,11 +194,11 @@ void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float
 void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward)
 {
 
-  Motor M1(34, 1, 9);
-  Motor M2(28, 0, 6);
-  Motor M3(30, 0, 7);
+  Motor M1(26, 0, 6);
+  Motor M2(38, 0, 12);
+  Motor M3(36, 0, 11);
 
-  Yaw = V.readMpu(3);                         // Reading Mpu Values
+  Yaw = V.readMpu(2);                         // Reading Mpu Values
   error_back = Yaw - Shifted_Yaw;
 
   error_encoder_back = X.encodervalue;
@@ -251,11 +251,11 @@ void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP
 */
 void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left)
 {
-  Motor M1(34, 1, 9);
-  Motor M2(28, 1, 6);
-  Motor M3(30, 0, 7);
+   Motor M1(26, 1, 6);
+   Motor M2(38, 1, 12);
+   Motor M3(36, 0, 11);
 
-  Yaw = V.readMpu(3);
+  Yaw = V.readMpu(2);
   error_left = Yaw - Shifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function                       //Calculating the basepwm in proportion with the error
 
   error_encoder_left = Y.encodervalue;                                            //Error for locomotion in X direction is given by the y encoder
@@ -314,10 +314,10 @@ void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, fl
 */
 void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right)
 {
-  Motor M1(34, 0, 9);
-  Motor M2(28, 0, 6);
-  Motor M3(30, 1, 7);
-  Yaw = V.readMpu(3);
+  Motor M1(26, 0, 6);
+  Motor M2(38, 0, 12);
+  Motor M3(36, 1, 11);
+  Yaw = V.readMpu(2);
 
   error_encoder_right = Y.encodervalue;
   pwm_encoder_right = KP_Enc_Right * (error_encoder_right);
@@ -433,7 +433,7 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
   while (rate_change != 0 || abs(error_ang) > 2)
   {
     // read from port 1, send to port 0:
-    Yaw = V.readMpu(3);
+    Yaw = V.readMpu(2);
 
     final_ang  = pow(-1, !dir) * req_angle + Shifted_Yaw ;
     final_ang += ((final_ang < - 180) - (final_ang > 180)) * 360 ;
@@ -489,22 +489,22 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
 
     /********************************************* SERIAL PRINTING DATA ***************************************************/
 
-    Serial.print("\tYaw: ");
-    Serial.print(Yaw);
-    Serial.print("\tError: ");
-    Serial.print(error_ang);
-    Serial.print("\tFinal: ");
-    Serial.print(final_ang);
-    Serial.print("\tKp:  ");
-    Serial.print(KP_Orient);
-    Serial.print("\tPWM:  ");
-    Serial.print(pwmm_ori);
-    Serial.print("\trate:  ");
-    Serial.print(rate_change);
-    Serial.print("\tprevious:  ");
-    Serial.print(prev_error);
-    Serial.print("\tdir:  ");
-    Serial.println(dir);
+//    Serial.print("\tYaw: ");
+//    Serial.print(Yaw);
+//    Serial.print("\tError: ");
+//    Serial.print(error_ang);
+//    Serial.print("\tFinal: ");
+//    Serial.print(final_ang);
+//    Serial.print("\tKp:  ");
+//    Serial.print(KP_Orient);
+//    Serial.print("\tPWM:  ");
+//    Serial.print(pwmm_ori);
+//    Serial.print("\trate:  ");
+//    Serial.print(rate_change);
+//    Serial.print("\tprevious:  ");
+//    Serial.print(prev_error);
+//    Serial.print("\tdir:  ");
+//    Serial.println(dir);
 
 
     pwmm_ori1 = pwmm_ori;

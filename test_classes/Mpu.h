@@ -25,19 +25,11 @@ public:
    _Yaw = 0;
 }
 
-float Mpu::readMpu(int s)
+float Mpu::readMpu(int s = 2)
 {
-    
-                if (Serial3.available())
-            {
-                yaw = Serial3.read();
-            }
+      
 
-            _Yaw = yaw * (180.00 / 127.00);
-
-            return _Yaw;    
-
-   /* switch (s) 
+    switch (s) 
     {
         case 1:
         {
@@ -58,9 +50,11 @@ float Mpu::readMpu(int s)
             if (Serial2.available())
             {
                 yaw = Serial2.read();
+                           
             }
 
             _Yaw = yaw * (180.00 / 127.00);
+
 
             return _Yaw;    
 
@@ -80,6 +74,6 @@ float Mpu::readMpu(int s)
             break;
         }
 
-    }*/
+    }
 }
 #endif

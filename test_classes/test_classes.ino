@@ -8,9 +8,9 @@ Manual A;
 Encoder X(21, 50);
 Encoder Y(2, 52);
 Mpu V;
-Motor M1(34, A.dirW1, 9);
-Motor M2(28, A.dirW2, 6);
-Motor M3(30, A.dirW3, 7);
+Motor M1(26, A.dirW1, 6);
+Motor M2(38, A.dirW2, 12);
+Motor M3(36, A.dirW3, 11);
 Piston Gripper(41, 39), Throwing(37, 35);
 
 int Piston_Press_Event = 0;
@@ -28,12 +28,13 @@ void UpdateYEncoder()
 //Variables to accept charater from Controller
 char command;
 char prevCommand = 'a';
+float w;
 
 void reset()
 {
   Y.encodervalue = 0;
   X.encodervalue = 0;
-  A.Yaw = V.readMpu(3);
+  A.Yaw = V.readMpu(2);
   A.Shifted_Yaw = A.Yaw;
   Serial.println("In Reset");
   Serial.println(A.Shifted_Yaw);
@@ -46,6 +47,7 @@ void setup()
 {
   Serial.begin(115200);
   Serial1.begin(115200);
+  Serial2.begin(115200);
   Serial3.begin(115200);
   pinMode(42,OUTPUT);
   pinMode(44,OUTPUT);
@@ -56,11 +58,11 @@ void setup()
 
 void loop()
 {
-  if (Serial1.available())
+  if (Serial3.available())
   {
-    command = Serial1.read();
+    command = Serial3.read();
   }
-  Serial.print(command);
+  //Serial.print(command);
 
   if (prevCommand != command && (command != 'c' || command != 'd'))
   {
@@ -121,11 +123,11 @@ void loop()
       reset();
       break;
 
-    case 'd':
+    case 'c':
       A.TTP_Man(0);
       break;
 
-    case 'c':
+    case 'd':
       A.TTP_Man(1);
       break;
 
