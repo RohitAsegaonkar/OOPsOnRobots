@@ -251,9 +251,9 @@ void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP
 */
 void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left)
 {
-   Motor M1(26, 1, 6);
-   Motor M2(38, 1, 12);
-   Motor M3(36, 0, 11);
+  Motor M1(26, 1, 6);
+  Motor M2(38, 1, 12);
+  Motor M3(36, 0, 11);
 
   Yaw = V.readMpu(2);
   error_left = Yaw - Shifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function                       //Calculating the basepwm in proportion with the error
@@ -384,10 +384,9 @@ void Manual :: TTP_Man(int dir)
     dirW3 = 0;
   }
 
-  Motor M1(34, dirW1, 9);
-  Motor M2(28, dirW2, 6);
-  Motor M3(30, dirW3, 7);
-
+  Motor M1(26, dirW1, 6);
+  Motor M2(38, dirW2, 12);
+  Motor M3(36, dirW3, 11);
   pwmm_ori = 50;
 
 
@@ -428,7 +427,7 @@ void Manual :: TTP_Man(int dir)
     Example Call        : M_Turn(KP_Orient, KI_Angle, 338.00);
 */
 void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
-{ 
+{
   error_ang = 5;
   while (rate_change != 0 || abs(error_ang) > 2)
   {
@@ -471,11 +470,11 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
       }
 
     }
-
-    Motor M1(34, dirW1, 9);
-    Motor M2(28, dirW2, 6);
-    Motor M3(30, dirW3, 7);
-
+    
+    Motor M1(26, dirW1, 6);
+    Motor M2(38, dirW2, 12);
+    Motor M3(36, dirW3, 11);
+    
     pwmm_ori = abs(error_ang) * KP_Orient;
 
     if (abs(error_ang) < 20)
@@ -489,22 +488,22 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
 
     /********************************************* SERIAL PRINTING DATA ***************************************************/
 
-//    Serial.print("\tYaw: ");
-//    Serial.print(Yaw);
-//    Serial.print("\tError: ");
-//    Serial.print(error_ang);
-//    Serial.print("\tFinal: ");
-//    Serial.print(final_ang);
-//    Serial.print("\tKp:  ");
-//    Serial.print(KP_Orient);
-//    Serial.print("\tPWM:  ");
-//    Serial.print(pwmm_ori);
-//    Serial.print("\trate:  ");
-//    Serial.print(rate_change);
-//    Serial.print("\tprevious:  ");
-//    Serial.print(prev_error);
-//    Serial.print("\tdir:  ");
-//    Serial.println(dir);
+    //    Serial.print("\tYaw: ");
+    //    Serial.print(Yaw);
+    //    Serial.print("\tError: ");
+    //    Serial.print(error_ang);
+    //    Serial.print("\tFinal: ");
+    //    Serial.print(final_ang);
+    //    Serial.print("\tKp:  ");
+    //    Serial.print(KP_Orient);
+    //    Serial.print("\tPWM:  ");
+    //    Serial.print(pwmm_ori);
+    //    Serial.print("\trate:  ");
+    //    Serial.print(rate_change);
+    //    Serial.print("\tprevious:  ");
+    //    Serial.print(prev_error);
+    //    Serial.print("\tdir:  ");
+    //    Serial.println(dir);
 
 
     pwmm_ori1 = pwmm_ori;
