@@ -7,13 +7,15 @@
 Manual A;
 Encoder X(21, 50);
 Encoder Y(2, 52);
-Mpu V;
+Mpu mpu;
 Motor M1(26, A.dirW1, 6);
 Motor M2(38, A.dirW2, 12);
 Motor M3(36, A.dirW3, 11);
 Piston Gripper(41, 39), Throwing(37, 35);
 
 int Piston_Press_Event = 0;
+char Non_S_Char;
+float Last_Yaw;
 
 void UpdateXEncoder()
 {
@@ -28,20 +30,6 @@ void UpdateYEncoder()
 //Variables to accept charater from Controller
 char command;
 char prevCommand = 'a';
-float w;
-
-void reset()
-{
-  Y.encodervalue = 0;
-  X.encodervalue = 0;
-  A.Yaw = V.readMpu(2);
-  A.Shifted_Yaw = A.Yaw;
-  Serial.println("In Reset");
-  Serial.println(A.Shifted_Yaw);
-  A.pwmm1 = 0;
-  A.pwmm2 = 0;
-  A.pwmm3 = 0;
-}
 
 void setup()
 {
@@ -64,31 +52,38 @@ void loop()
   }
   //Serial.print(command);
 
-  if (prevCommand != command && (command != 'c' || command != 'd'))
+  if(command != 'S' && command != 's')
   {
-    reset();
+    //Serial.println("In Not S condition");   
+    Non_S_Char = command;
+  }
+
+  if ((prevCommand != command) && (command != 'p' || command != 'g'))
+  {
+//    Serial.println("In Reset condition");
+    A.reset();
   }
 
   switch (command)
   {
     case 'F':
       A.forwardManY(A.Kp_strm2_forward, A.Kp_strm3_forward, A.Kp_encoder_forward);
-      Serial.println("In F");
+      //Serial.println("In F");
       break;
 
     case 'B':
       A.backwardManY(A.Kp_strm2_back, A.Kp_strm3_back, A.Kp_encoder_back);
-      Serial.println("In B");
+      //Serial.println("In B");
       break;   
 
     case 'L':
       A.leftManX(A.Kp_strm1_left,A.Kp_strm2_left, A.Kp_strm3_left, A.Kp_encoder_left);
-      Serial.println("In L");
+      //Serial.println("In L");
       break;
 
     case 'R':
       A.rightManX(A.Kp_strm1_left,A.Kp_strm2_left, A.Kp_strm3_left, A.Kp_encoder_left);
-      Serial.println("In R");
+      //Serial.println("In R");
       break;
 
     case 'S':
@@ -99,7 +94,7 @@ void loop()
       digitalWrite(39,0);
       digitalWrite(35,0);
       digitalWrite(41,0);
-      Serial.println("In s");
+      //Serial.println("In s");
       break;
 
     case 's':
@@ -115,12 +110,12 @@ void loop()
 
       case 'g':
       A.TurnMan(A.kp_ori, A.ki_ang, 15.00, 0);
-      reset();
+      A.reset();
       break;
 
     case 'p':
       A.TurnMan(A.kp_ori, A.ki_ang, 15.00, 1);
-      reset();
+      A.reset();
       break;
 
     case 'c':

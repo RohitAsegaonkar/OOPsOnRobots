@@ -52,10 +52,9 @@ float Mpu::readMpu(int s = 2)
                 yaw = Serial2.read();
                            
             }
-
+ 
             _Yaw = yaw * (180.00 / 127.00);
-
-
+            
             return _Yaw;    
 
             break;
