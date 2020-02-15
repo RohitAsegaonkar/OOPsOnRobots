@@ -4,13 +4,17 @@
 #include "Manual.h"
 #include "Piston.h"
 
-Manual A;
 Encoder X(21, 50);
 Encoder Y(2, 52);
+
 Mpu mpu;
-Motor M1(26, A.dirW1, 6);
-Motor M2(38, A.dirW2, 12);
-Motor M3(36, A.dirW3, 11);
+
+Motor M1(26, 1, 6);
+Motor M2(38, 0, 12);
+Motor M3(36, 1, 11);
+
+Manual A(M1, M2, M3, mpu, X, Y);
+
 Piston Gripper(41, 39), Throwing(37, 35);
 
 int Piston_Press_Event = 0;
