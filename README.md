@@ -65,3 +65,36 @@ Encoder X(int EncoderPin, int ComparePin);
 X.updateEncoder();     //Updating Encoder Values
 
 ```
+
+## Class Mpu
+Class Mpu is used to represent the inertial measurement unit MPU6050.<br>
+
+#### Member Variables:
+```cpp
+```
+
+#### Member Functions:
+```cpp
+- int readMpu(int s).
+```
+### Creating an object of class Mpu
+Meaning of parameters:
+* s - to select the serial port <br>
+
+| s  | serial port |
+|--- |-------------| 
+| 1  | serial1     | 
+| 2  | serial2     |
+| 3  | serial3     |
+
+```cpp 
+Mpu V;
+```
+### Invoking Member Functions
+```cpp
+Mpu V;
+
+V.readMpu(2);      //reads available data from serial port 2
+```
+
+
