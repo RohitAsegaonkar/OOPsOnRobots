@@ -9,7 +9,8 @@
 class Manual
 {
   private:
-
+                                       //Variable to store the resolved value of yaw from -180 to 180
+    float Shifted_Yaw = 0;
   public:
 
     Manual(/* args */);
@@ -17,12 +18,10 @@ class Manual
     bool dirW1 = 0 ;
     bool dirW2 ;
     bool dirW3 ;
-    float Yaw = 0;                                          //Variable to store the resolved value of yaw from -180 to 180
-    float Shifted_Yaw = 0;
-
+    float Yaw = 0;   
     /************ PWM Values ************/
-#define Maxpwm 200.00
-#define basePwm 150
+  #define Maxpwm 200.00
+  #define basePwm 150
     int pwmm1, pwmm2, pwmm3;
 
     /************************ Objects Created *********************************/
@@ -42,7 +41,7 @@ class Manual
     void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right);
     void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir);
     void TTP_Man(int dir);
-
+    void UpdateShiftedYaw(float Yaw_ref);
 
     float error_forward;                                 //Variable to store the value of the X encoder as error.
     const float Kp_encoder_forward = 0.0 ;                       //Proportionality constant for the lateral error
@@ -109,10 +108,15 @@ class Manual
 };
 
 
-Manual::Manual(/* args */)
+Manual::Manual()
 {
   Yaw = 0;
-  Shifted_Yaw = 0.00;
+ // Shifted_Yaw = 0.00;
+}
+
+void Manual::UpdateShiftedYaw(float Yaw_ref)
+{
+  Shifted_Yaw = Yaw_ref;
 }
 
 /*
@@ -172,6 +176,8 @@ void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float
   Serial.print(error_encoder_forward);
   Serial.print("\tencodervalue1 :      ");
   Serial.print(Y.encodervalue);
+  Serial.print("\tkp_strm2_forward :      ");
+  Serial.print(kp_strm2_forward);
   Serial.print("\tPWM:  ");
   Serial.print(pwmm1);
   Serial.print("   ");
@@ -287,6 +293,8 @@ void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, fl
 
   Serial.print("\tYaw: ");
   Serial.print(Yaw);
+  Serial.print("\tShifted Yaw: ");
+  Serial.print(Shifted_Yaw);
   Serial.print("\tError: ");
   Serial.print(error_left);
   Serial.print("\tError encoder: ");
@@ -383,6 +391,9 @@ void Manual :: TTP_Man(int dir)
     dirW2 = 1;
     dirW3 = 0;
   }
+
+  Serial.print("\tShifted Yaw: ");
+  Serial.print(Shifted_Yaw);
 
   Motor M1(26, dirW1, 6);
   Motor M2(38, dirW2, 12);
@@ -490,6 +501,8 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
 
     //    Serial.print("\tYaw: ");
     //    Serial.print(Yaw);
+            Serial.print("\tShifted Yaw: ");
+            Serial.print(Shifted_Yaw);
     //    Serial.print("\tError: ");
     //    Serial.print(error_ang);
     //    Serial.print("\tFinal: ");

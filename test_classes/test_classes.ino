@@ -14,6 +14,7 @@ Motor M3(36, A.dirW3, 11);
 Piston Gripper(41, 39), Throwing(37, 35);
 
 int Piston_Press_Event = 0;
+char Non_S_Char;
 
 void UpdateXEncoder()
 {
@@ -35,9 +36,10 @@ void reset()
   Y.encodervalue = 0;
   X.encodervalue = 0;
   A.Yaw = V.readMpu(2);
-  A.Shifted_Yaw = A.Yaw;
+//  A.Shifted_Yaw = A.Yaw;
   Serial.println("In Reset");
-  Serial.println(A.Shifted_Yaw);
+  Serial.println(A.Yaw);
+  A.UpdateShiftedYaw(A.Yaw);
   A.pwmm1 = 0;
   A.pwmm2 = 0;
   A.pwmm3 = 0;
@@ -64,7 +66,12 @@ void loop()
   }
   //Serial.print(command);
 
-  if (prevCommand != command && (command != 'c' || command != 'd'))
+  if(command != 'S' || command != 's')
+  {
+    Non_S_Char = command;
+  }
+
+  if (prevCommand != command && (command != 'p' || command != 'g') && Non_S_Char != command )
   {
     reset();
   }
