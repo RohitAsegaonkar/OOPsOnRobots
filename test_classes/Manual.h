@@ -46,8 +46,8 @@ class Manual
 
     float error_forward;                                 //Variable to store the value of the X encoder as error.
     const float Kp_encoder_forward = 0.0 ;                       //Proportionality constant for the lateral error
-    const float Kp_strm2_forward = 0.48 ;                       //Proportionality constant for the angular error for motor 2
-    const float  Kp_strm3_forward = 0.48 ;                        //Proportionality constant for the angular error for motor 3
+    const float Kp_strm2_forward = 0.6 ;                       //Proportionality constant for the angular error for motor 2
+    const float  Kp_strm3_forward = 0.35 ;                        //Proportionality constant for the angular error for motor 3
 
     float error_encoder_forward;
     float pwm_encoder_forward;
@@ -112,7 +112,7 @@ class Manual
 Manual::Manual()
 {
   Yaw = 0;
- // Shifted_Yaw = 0.00;
+  Shifted_Yaw = 0.00;
 }
 
 void Manual::reset()
@@ -158,7 +158,7 @@ void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float
   pwm_encoder_forward = kp_encoder_forward * (error_encoder_forward);
 
   pwmm2 = basePwm + kp_strm2_forward * (error_forward) - pwm_encoder_forward ;
-  pwmm3 = basePwm - kp_strm3_forward * (error_forward) + pwm_encoder_forward + 6;
+  pwmm3 = basePwm - kp_strm3_forward * (error_forward) + pwm_encoder_forward + 6;//+6
 
   /*if (error_forward < 5)
     {
