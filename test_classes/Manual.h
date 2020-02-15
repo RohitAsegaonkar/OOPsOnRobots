@@ -5,7 +5,6 @@
 #include "Mpu.h"
 #include "Motor.h"
 
-
 class Manual
 {
   private:
@@ -17,7 +16,10 @@ class Manual
 
   public:
 
-    Manual();
+    Manual()
+    {
+      Yaw = 0;
+    }
 
     Manual(Motor m1, Motor m2, Motor m3, Mpu v, Encoder x, Encoder y)
     {
@@ -34,9 +36,10 @@ class Manual
 
 
     //Boolean Variables to set direction of Wheels
-    bool dirW1 = 0 ;
+    /*bool dirW1 = 0 ;
     bool dirW2 ;
-    bool dirW3 ;
+    bool dirW3 ;*/
+
     float Yaw = 0;   
 
     /************ PWM Values ************/
@@ -44,9 +47,7 @@ class Manual
     #define basePwm 150
     int pwmm1, pwmm2, pwmm3;
 
-    /************************ Objects Created *********************************/
-
-
+    /**********Function Declarations**********/
     void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward);
     void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
     void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left);
@@ -56,10 +57,11 @@ class Manual
     void UpdateShiftedYaw(float Yaw_ref);
     void reset();
 
-    float error_forward;                                 //Variable to store the value of the_X-Enc encoder as error.
-    const float Kp_encoder_forward = 0.0 ;                       //Proportionality constant for the lateral error
+    /*** forwardManY() Function Variables ***/
+    float error_forward;                                        //Variable to store the value of the_X-Enc encoder as error.
+    const float Kp_encoder_forward = 0.0 ;                      //Proportionality constant for the lateral error
     const float Kp_strm2_forward = 0.48 ;                       //Proportionality constant for the angular error for motor 2
-    const float  Kp_strm3_forward = 0.48 ;                        //Proportionality constant for the angular error for motor 3
+    const float  Kp_strm3_forward = 0.48 ;                      //Proportionality constant for the angular error for motor 3
 
     float error_encoder_forward;
     float pwm_encoder_forward;
@@ -124,11 +126,9 @@ class Manual
 
 };
 
-
-Manual::Manual()
+void Manual::UpdateShiftedYaw(float Yaw_ref)
 {
-  Yaw = 0;
- // Shifted_Yaw = 0.00;
+  Shifted_Yaw = Yaw_ref;
 }
 
 void Manual::reset()
@@ -137,18 +137,16 @@ void Manual::reset()
   _X.encodervalue = 0;
   //Last_Yaw = V.readMpu(2);
   //A.Shifted_Yaw = A.Yaw;
+
   Serial.print("In Reset");
   Serial.print("\tA.Yaw = ");  
   Serial.println(_V.readMpu(2));
+
   UpdateShiftedYaw(_V.readMpu(2));
+
   pwmm1 = 0;
   pwmm2 = 0;
   pwmm3 = 0;
-}
-
-void Manual::UpdateShiftedYaw(float Yaw_ref)
-{
-  Shifted_Yaw = Yaw_ref;
 }
 
 /*
@@ -251,7 +249,6 @@ void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP
   _M3.SetSpeed(abs(pwmm3));
 
   /********************************************* SERIAL PRINTING DATA ***************************************************/
-
 
   Serial.print("\tYaw: ");
   Serial.print(Yaw);
@@ -405,15 +402,15 @@ void Manual :: TTP_Man(int dir)
 {
   if (dir == 1)
   {
-    dirW1 = 1;
-    dirW2 = 0;
-    dirW3 = 1;
+      _M1.SetDirection(1);
+      _M2.SetDirection(0);
+      _M3.SetDirection(1);
   }
   else if (dir == 0)
   {
-    dirW1 = 0;
-    dirW2 = 1;
-    dirW3 = 0;
+      _M1.SetDirection(0);
+      _M2.SetDirection(1);
+      _M3.SetDirection(0);
   }
 
   Serial.print("\tShifted Yaw: ");
@@ -476,15 +473,15 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
 
     if (dir)
     {
-      dirW1 = 1;
-      dirW2 = 0;
-      dirW3 = 1;
+      _M1.SetDirection(1);
+      _M2.SetDirection(0);
+      _M3.SetDirection(1);
     }
     else
     {
-      dirW1 = 0;
-      dirW2 = 1;
-      dirW3 = 0;
+      _M1.SetDirection(0);
+      _M2.SetDirection(1);
+      _M3.SetDirection(0);
     }
 
     error_sum_ori = error_sum_ori + error_ang;
@@ -498,9 +495,9 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
     {
       if ((rate_change) > 0)
       {
-        dirW1 = !(dirW1);
-        dirW2 = !(dirW2);
-        dirW3 = !(dirW3);
+        _M1.ToggleDirection();
+        _M2.ToggleDirection();
+        _M3.ToggleDirection();
       }
     }
 
