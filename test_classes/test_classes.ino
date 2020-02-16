@@ -9,8 +9,8 @@ Encoder Y(2, 52);
 
 Mpu mpu;
 
-Motor M1(26, 1, 6);
-Motor M2(38, 0, 12);
+Motor M1(26, 0, 6);
+Motor M2(38, 1, 12);
 Motor M3(36, 1, 11);
 
 Manual A(M1, M2, M3, mpu, X, Y);
