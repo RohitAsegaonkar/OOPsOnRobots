@@ -181,9 +181,9 @@ void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float
   if (pwmm3 > Maxpwm)
     pwmm3 = Maxpwm;
 
-  _M1.SetDirection();
-  _M2.SetDirection();
-  _M3.SetDirection();
+  _M1.SetDirection(0);
+  _M2.SetDirection(1);
+  _M3.SetDirection(1);
 
   _M1.SetSpeed(0);
   _M2.SetSpeed(abs(pwmm2));
@@ -240,9 +240,9 @@ void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP
   if (pwmm3 > Maxpwm)
     pwmm3 = Maxpwm;
 
-  _M1.SetDirection();
-  _M2.SetDirection();
-  _M3.SetDirection();
+  _M1.SetDirection(1);
+  _M2.SetDirection(0);
+  _M3.SetDirection(0);
 
   _M1.SetSpeed(0);
   _M2.SetSpeed(abs(pwmm2));
@@ -301,9 +301,9 @@ void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, fl
   if (pwmm3 > Maxpwm)
     pwmm3 = Maxpwm / 2;
 
-  _M1.SetDirection();
-  _M2.SetDirection();
-  _M3.SetDirection();
+  _M1.SetDirection(1);
+  _M2.SetDirection(1);
+  _M3.SetDirection(0);
 
 
   _M1.SetSpeed(abs(pwmm1));
@@ -362,9 +362,9 @@ void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right
   if (pwmm3 > Maxpwm)
     pwmm3 = Maxpwm / 2;
 
-  _M1.SetDirection();
-  _M2.SetDirection();
-  _M3.SetDirection();
+  _M1.SetDirection(0);
+  _M2.SetDirection(0);
+  _M3.SetDirection(1);
 
   _M1.SetSpeed(abs(pwmm1));
   _M2.SetSpeed(abs(pwmm2));
@@ -400,13 +400,13 @@ void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right
 */
 void Manual :: TTP_Man(int dir)
 {
-  if (dir == 1)
+  if (dir == 0)
   {
       _M1.SetDirection(1);
       _M2.SetDirection(0);
       _M3.SetDirection(1);
   }
-  else if (dir == 0)
+  else if (dir == 1)
   {
       _M1.SetDirection(0);
       _M2.SetDirection(1);
@@ -473,15 +473,15 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
 
     if (dir)
     {
-      _M1.SetDirection(1);
-      _M2.SetDirection(0);
-      _M3.SetDirection(1);
-    }
-    else
-    {
       _M1.SetDirection(0);
       _M2.SetDirection(1);
       _M3.SetDirection(0);
+    }
+    else
+    {
+      _M1.SetDirection(1);
+      _M2.SetDirection(0);
+      _M3.SetDirection(1);
     }
 
     error_sum_ori = error_sum_ori + error_ang;
@@ -536,10 +536,6 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
     pwmm_ori1 = pwmm_ori;
     pwmm_ori2 = pwmm_ori;
     pwmm_ori3 = pwmm_ori;
-
-    _M1.SetDirection();
-    _M2.SetDirection();
-    _M3.SetDirection();
 
     _M1.SetSpeed(pwmm_ori1);
     _M2.SetSpeed(pwmm_ori2);
