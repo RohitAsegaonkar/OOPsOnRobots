@@ -104,7 +104,7 @@ class Manual
 
     //PID Constants
     const float kp_ori = 2.75;
-    const float ki_ang = 0.000;
+    const float ki_ang = 0.001;
 
 };
 
@@ -174,6 +174,7 @@ void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float
   M1.SetDirection();
   M2.SetDirection();
   M3.SetDirection();
+
 
   M1.SetSpeed(0);
   M2.SetSpeed(abs(pwmm2));
@@ -497,7 +498,7 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
     }
     if (count > 0)
     {
-      if ((rate_change) > 0)
+      if ((rate_change) >= 0)
       {
         dirW1 = !(dirW1);
         dirW2 = !(dirW2);
@@ -523,24 +524,24 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
 
     /********************************************* SERIAL PRINTING DATA ***************************************************/
 
-    //    Serial.print("\tYaw: ");
-    //    Serial.print(Yaw);
+        Serial.print("\tYaw: ");
+        Serial.print(Yaw);
             Serial.print("\tShifted Yaw: ");
             Serial.println(Shifted_Yaw);
-    //    Serial.print("\tError: ");
-    //    Serial.print(error_ang);
-    //    Serial.print("\tFinal: ");
-    //    Serial.print(final_ang);
-    //    Serial.print("\tKp:  ");
-    //    Serial.print(KP_Orient);
-    //    Serial.print("\tPWM:  ");
-    //    Serial.print(pwmm_ori);
-    //    Serial.print("\trate:  ");
-    //    Serial.print(rate_change);
-    //    Serial.print("\tprevious:  ");  Serial.print("In Reset");
-    //    Serial.print(prev_error);
-    //    Serial.print("\tdir:  ");
-    //    Serial.println(dir);
+        Serial.print("\tError: ");
+        Serial.print(error_ang);
+        Serial.print("\tFinal: ");
+        Serial.print(final_ang);
+        Serial.print("\tKp:  ");
+        Serial.print(KP_Orient);
+        Serial.print("\tPWM:  ");
+        Serial.print(pwmm_ori);
+        Serial.print("\trate:  ");
+        Serial.print(rate_change);
+        Serial.print("\tprevious:  ");  Serial.print("In Reset");
+        Serial.print(prev_error);
+        Serial.print("\tdir:  ");
+        Serial.println(dir);
 
 
     pwmm_ori1 = pwmm_ori;

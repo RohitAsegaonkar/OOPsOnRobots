@@ -6,14 +6,11 @@
                 "/home/amogh/arduino-1.8.10/tools/**",
                 "/home/amogh/arduino-1.8.10/hardware/arduino/avr/**",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
-                "C:\\Program Files (x86)\\Arduino\\tools\\**",
-                "/home/rohit/arduino-1.8.10/hardware/arduino/avr/**",
-                "/home/rohit/arduino-1.8.10/tools/**"
+                "C:\\Program Files (x86)\\Arduino\\tools\\**"
             ],
             "forcedInclude": [
                 "/home/amogh/arduino-1.8.10/hardware/arduino/avr/cores/arduino/Arduino.h",
-                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h",
-                "/home/rohit/arduino-1.8.10/hardware/arduino/avr/cores/arduino/Arduino.h"
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
             ],
             "intelliSenseMode": "gcc-x64",
             "compilerPath": "/usr/bin/gcc",
