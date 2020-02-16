@@ -8,11 +8,60 @@
 class Manual
 {
   private:
+
     float Shifted_Yaw = 0;//Variable to store the resolved value of yaw from -180 to 180
     Encoder _X;
     Encoder _Y;
     Mpu _V;
     Motor _M1, _M2, _M3;
+
+    float Yaw = 0;   
+
+    /************ PWM Values ************/
+    #define Maxpwm 200.00
+    #define basePwm 150
+    int pwmm1, pwmm2, pwmm3;
+
+    /*** forwardManY() Function Variables ***/
+    float error_forward;                                        //Variable to store the value of the_X-Enc encoder as error.
+
+    float error_encoder_forward;
+    float pwm_encoder_forward;
+    float error_sum_forward;
+    /****************************************/
+
+    /*** backwardManY() Function Variables ***/
+    float error_back;
+
+    float error_encoder_back;
+    float pwm_encoder_back;
+    float error_sum_back;
+    /****************************************/
+
+    /***** leftManX() Function Variables *****/
+    float error_left;                                     //Variable to store the value of the_X-Enc encoder as error.
+
+    float error_encoder_left;
+    float pwm_encoder_left;
+    float error_sum_left;
+    /****************************************/
+
+    /***** rightManX() Function Variables *****/
+    float error_right;
+
+    float error_encoder_right;
+    float pwm_encoder_right;
+    float error_sum_right;
+    /****************************************/
+
+    //Variables required to keep track of future and past
+    float rate_change = 5;
+    float error_sum_ori;
+    float prev_error = 0;
+
+    //Variables used for PID
+    float req_angle = 0.0;
+    float error_ang = 3;
 
   public:
 
@@ -34,74 +83,6 @@ class Manual
       _V = v;
     }
 
-
-    //Boolean Variables to set direction of Wheels
-    /*bool dirW1 = 0 ;
-    bool dirW2 ;
-    bool dirW3 ;*/
-
-    float Yaw = 0;   
-
-    /************ PWM Values ************/
-    #define Maxpwm 200.00
-    #define basePwm 150
-    int pwmm1, pwmm2, pwmm3;
-
-    /**********Function Declarations**********/
-    void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward);
-    void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
-    void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left);
-    void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right);
-    void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir);
-    void TTP_Man(int dir);
-    void UpdateShiftedYaw(float Yaw_ref);
-    void reset();
-
-    /*** forwardManY() Function Variables ***/
-    float error_forward;                                        //Variable to store the value of the_X-Enc encoder as error.
-    const float Kp_encoder_forward = 0.0 ;                      //Proportionality constant for the lateral error
-    const float Kp_strm2_forward = 0.48 ;                       //Proportionality constant for the angular error for motor 2
-    const float  Kp_strm3_forward = 0.48 ;                      //Proportionality constant for the angular error for motor 3
-
-    float error_encoder_forward;
-    float pwm_encoder_forward;
-    float error_sum_forward;
-
-    /*** backwardManY() Function Variables ***/
-    float error_back;
-    const float Kp_encoder_back = 0.068;
-    const float Kp_strm2_back = 0.25;
-    const float Kp_strm3_back = 0.25;
-
-    float error_encoder_back;
-    float pwm_encoder_back;
-    float error_sum_back;
-    /****************************************/
-
-    /***** leftManX() Function Variables *****/
-    float error_left;                                     //Variable to store the value of the_X-Enc encoder as error.
-    const float Kp_encoder_left = 0.02;
-    const float Kp_strm1_left = 0.4;
-    const float Kp_strm2_left = 0.6;
-    const float Kp_strm3_left = 0.6;
-
-    float error_encoder_left;
-    float pwm_encoder_left;
-    float error_sum_left;
-    /****************************************/
-
-    /***** rightManX() Function Variables *****/
-    float error_right;
-    const float Kp_encoder_right = 0.03;
-    const float Kp_strm1_right = 0.6;
-    const float Kp_strm2_right = 0.4;
-    const float Kp_strm3_right = 0.45;
-
-    float error_encoder_right;
-    float pwm_encoder_right;
-    float error_sum_right;
-    /****************************************/
-
     int final_ang = 0, correction_angle = 0;
     int count = 0;
 
@@ -111,27 +92,24 @@ class Manual
     //PWM Values given to each wheel
     int pwmm_ori1, pwmm_ori2, pwmm_ori3;
 
-    //Variables used for PID
-    float req_angle = 0.0;
-    float error_ang = 3;
-
-    //Variables required to keep track of future and past
-    float rate_change = 5;
-    float error_sum_ori;
-    float prev_error = 0;
-
-    //PID Constants
-    const float kp_ori = 2.75;
-    const float ki_ang = 0.000;
-
-};
-
-void Manual::UpdateShiftedYaw(float Yaw_ref)
+/*
+    Function Name       : UpdateShiftedYaw(float Yaw_ref)
+    Input               : Yaw_ref
+    Output              : Resets all the Variables
+    Example Call        : UpdateShiftedYaw(Yaw_ref)
+*/
+void UpdateShiftedYaw(float Yaw_ref)
 {
   Shifted_Yaw = Yaw_ref;
 }
 
-void Manual::reset()
+/*
+    Function Name       : reset()
+    Input               : None
+    Output              : Resets all the Variables
+    Example Call        : reset()
+*/
+void reset()
 {
   _Y.encodervalue = 0;
   _X.encodervalue = 0;
@@ -158,7 +136,7 @@ void Manual::reset()
                           PID is implemented for precise movement.
     Example Call        : forwardManY(float kp_strm2_forward,float kp_strm3_forward,float kp_encoder_forward);
 */
-void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward)
+void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward)
 {
   Serial.println("In F");
   Yaw = _V.readMpu(2);                          // Reading Mpu Values
@@ -213,7 +191,6 @@ void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float
 
 }
 
-
 /*
     Function Name    :  backwardManY()
     Input            :  Required distance(requiredDistance_back) for which function is to be executed,Proportionality constants of Each Motors(kp_strm1_back,KP_M2_Backward,KP_M3_Backward),
@@ -223,7 +200,7 @@ void Manual :: forwardManY(float kp_strm2_forward, float kp_strm3_forward, float
                         PID is implemented for precise movement.
     Example Call     :  backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
 */
-void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward)
+void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward)
 {
   Yaw = _V.readMpu(2);                         // Reading Mpu Values
   error_back = Yaw - Shifted_Yaw;
@@ -280,12 +257,12 @@ void Manual :: backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP
                             PID is implemented for precise movement.
     Example Call          : leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left);
 */
-void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left)
+void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left)
 {
   Yaw = _V.readMpu(2);
   error_left = Yaw - Shifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function                       //Calculating the basepwm in proportion with the error
 
-  error_encoder_left = _Y.encodervalue;                                            //Error for locomotion in X direction is given by the y encoder
+  error_encoder_left = _Y.encodervalue;                                           //Error for locomotion in X direction is given by the y encoder
   pwm_encoder_left = KP_Enc_Left * (error_encoder_left);                          //Calculating the pwm error
 
   pwmm1 = basePwm - KP_M1_Left * (error_left) - pwm_encoder_left;                 //Calculating the pwm for motor 1 according to the equations of velocities
@@ -304,7 +281,6 @@ void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, fl
   _M1.SetDirection(1);
   _M2.SetDirection(1);
   _M3.SetDirection(0);
-
 
   _M1.SetSpeed(abs(pwmm1));
   _M2.SetSpeed(abs(pwmm2));
@@ -342,7 +318,7 @@ void Manual :: leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, fl
                             PID is implemented for precise movement.
     Example Call         :  rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right);
 */
-void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right)
+void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right)
 {
   Yaw = _V.readMpu(2);
 
@@ -398,7 +374,7 @@ void Manual :: rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right
     Logic               : Bot orients at desired or required angle from initial position, all motors are given equal pwm until it acquires desired angle.
     Example Call        : M_TurnTillPressed(1);
 */
-void Manual :: TTP_Man(int dir)
+void TTP_Man(int dir)
 {
   if (dir == 0)
   {
@@ -417,7 +393,6 @@ void Manual :: TTP_Man(int dir)
   Serial.println(Shifted_Yaw);
 
   pwmm_ori = 50;
-
 
   /********************************************* SERIAL PRINTING DATA ***************************************************/
   /*
@@ -443,7 +418,6 @@ void Manual :: TTP_Man(int dir)
   _M2.SetDirection();
   _M3.SetDirection();
 
-
   _M1.SetSpeed(pwmm_ori1);
   _M2.SetSpeed(pwmm_ori2);
   _M3.SetSpeed(pwmm_ori3);
@@ -455,7 +429,7 @@ void Manual :: TTP_Man(int dir)
     Logic               : Bot orients at desired or required angle from initial position, all motors are given equal pwm until it acquires desired angle.
     Example Call        : M_Turn(KP_Orient, KI_Angle, 338.00);
 */
-void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
+void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
 {
   error_ang = 5;
   while (rate_change != 0 || abs(error_ang) > 2)
@@ -543,6 +517,7 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
 
     prev_error = error_ang;
   }
+
   _M1.SetSpeed(0);
   _M2.SetSpeed(0);
   _M3.SetSpeed(0);
@@ -550,5 +525,6 @@ void Manual :: TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir
   count = 0;
 }
 
+};
 
 #endif
