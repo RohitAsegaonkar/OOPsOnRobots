@@ -59,7 +59,7 @@ void loop()
     #if MPU
 
     float Yaw;
-    Yaw = mpu.readmpu(2);
+    Yaw = mpu.readMpu(2);
     Serial.print(" Yaw : \t" );
     Serial.println(Yaw);
 
