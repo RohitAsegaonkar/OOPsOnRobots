@@ -17,27 +17,35 @@ Manual A(M1, M2, M3, mpu, X, Y);
 
 Piston Gripper(41, 39), Throwing(37, 35);
 
-const float Kp_encoder_forward = 0.0 ;                     //Proportionality constant for the lateral error
-const float Kp_strm2_forward = 0.48 ;                      //Proportionality constant for the angular error for motor 2
-const float Kp_strm3_forward = 0.48 ;                      //Proportionality constant for the angular error for motor 3
+/****************************************** PID Constants for forward function ******************************************/
+#define Kp_encoder_forward 0.0                    //Proportionality constant for the lateral error
+#define Kp_strm2_forward 0.6                      //Proportionality constant for the angular error for motor 2
+#define Kp_strm3_forward 0.35                     //Proportionality constant for the angular error for motor 3
+/************************************************************************************************************************/
 
-const float Kp_encoder_back = 0.068;
-const float Kp_strm2_back = 0.25;
-const float Kp_strm3_back = 0.25;
+/****************************************** PID Constants for backward function *****************************************/
+#define Kp_encoder_back 0.068
+#define Kp_strm2_back 0.25
+#define Kp_strm3_back 0.25
+/************************************************************************************************************************/
 
-const float Kp_encoder_left = 0.02;
-const float Kp_strm1_left = 0.4;
-const float Kp_strm2_left = 0.6;
-const float Kp_strm3_left = 0.6;
+/****************************************** PID Constants for left function *****************************************/
+#define Kp_encoder_left 0.02
+#define Kp_strm1_left 0.4
+#define Kp_strm2_left 0.6
+#define Kp_strm3_left 0.6
+/********************************************************************************************************************/
 
-const float Kp_encoder_right = 0.03;
-const float Kp_strm1_right = 0.6;
-const float Kp_strm2_right = 0.4;
-const float Kp_strm3_right = 0.45;
+/****************************************** PID Constants for right function *****************************************/
+#define Kp_encoder_right 0.03
+#define Kp_strm1_right 0.6
+#define Kp_strm2_right 0.4
+#define Kp_strm3_right 0.45
+/*********************************************************************************************************************/
 
-//PID Constants
-const float kp_ori = 2.75;
-const float ki_ang = 0.000;
+/********************************* PID Constants for orientation control functions ***********************************/
+#define kp_ori = 2.75;
+#define ki_ang = 0.001;
 
 int Piston_Press_Event = 0;
 char Non_S_Char;
