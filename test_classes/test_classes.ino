@@ -44,8 +44,8 @@ Piston Gripper(41, 39), Throwing(37, 35);
 /*********************************************************************************************************************/
 
 /********************************* PID Constants for orientation control functions ***********************************/
-#define kp_ori = 2.75;
-#define ki_ang = 0.001;
+#define kp_ori 2.75
+#define ki_ang 0.001
 
 int Piston_Press_Event = 0;
 char Non_S_Char;
