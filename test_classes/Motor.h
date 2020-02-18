@@ -38,6 +38,7 @@ class Motor
         void SetDirection(bool _dir);
         void ToggleDirection();
         void SetSpeed(int _PWM);
+        bool GetDirection();
 };
 
 void Motor::ToggleDirection()
@@ -46,14 +47,20 @@ void Motor::ToggleDirection()
     digitalWrite(_DirPin,_Dir);
 }
 
+bool Motor::GetDirection()
+{
+  return _Dir;
+}
+
 void Motor::SetDirection()
 {
     digitalWrite(_DirPin,_Dir);
 }
 
 void Motor::SetDirection(bool _dir)
-{
-    digitalWrite(_DirPin, _dir);
+{   
+    _Dir = _dir;
+    digitalWrite(_DirPin, _Dir);
 }
 
 void Motor::SetSpeed(int _PWM)
