@@ -125,6 +125,7 @@ void reset()
   pwmm1 = 0;
   pwmm2 = 0;
   pwmm3 = 0;
+  prev_error = 0;
 }
 
 /*
@@ -431,8 +432,8 @@ void TTP_Man(int dir)
 */
 void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
 {
+  //prev_error = error_ang; 
   error_ang = 5;
-  prev_error = error_ang; 
    if (!dir)
     {
       _M1.SetDirection(0);
@@ -472,6 +473,26 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
 
         flag = 0;
         Serial.println(".........................................");
+          Serial.print("\tYaw: ");
+        Serial.print(Yaw);
+          Serial.print("\tShifted Yaw: ");
+          Serial.print(Shifted_Yaw);
+        Serial.print("\tError: ");
+        Serial.print(error_ang);
+        Serial.print("\tFinal: ");
+        Serial.print(final_ang);
+        Serial.print("\tM1_dir:  ");  
+        Serial.print(_M1.GetDirection());
+        Serial.print("\tM2_dir:  ");  
+        Serial.print(_M2.GetDirection());
+        Serial.print("\tM3_dir:  ");  
+        Serial.print(_M3.GetDirection());        
+        Serial.print("\tprevious:  ");  
+        Serial.print(prev_error);
+        Serial.print("\tdir:  ");
+        Serial.println(dir);
+        Serial.println(".........................................");
+
     }
 
 
@@ -505,8 +526,8 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
         Serial.print(Yaw);
           Serial.print("\tShifted Yaw: ");
           Serial.print(Shifted_Yaw);
-//        Serial.print("\tError: ");
-//        Serial.print(error_ang);
+        Serial.print("\tError: ");
+        Serial.print(error_ang);
         Serial.print("\tFinal: ");
         Serial.print(final_ang);
 //        Serial.print("\tKp:  ");
