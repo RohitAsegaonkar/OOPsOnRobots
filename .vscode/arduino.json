@@ -3,5 +3,5 @@
     "configuration": "cpu=atmega2560",
     "sketch": "test_classes/test_classes.ino",
     "programmer": "ArduinoISP.org",
-    "port": "COM4"
+    "port": "/dev/ttyACM0"
 }
