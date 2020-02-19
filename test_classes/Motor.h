@@ -1,6 +1,6 @@
 /* Filename                 : Motor.h
  * Name of Class            : Motor
- * Name of Methods          : SetDirection(),ToggleDirction(),SetSpeed();
+ * Name of Methods          : SetDirection(),ToggleDirection(),SetSpeed();
  * Name of Member Variables :
  *
  */
@@ -52,8 +52,9 @@ void Motor::SetDirection()
 }
 
 void Motor::SetDirection(bool _dir)
-{
-    digitalWrite(_DirPin, _dir);
+{   
+    _Dir = _dir;
+    digitalWrite(_DirPin, _Dir);
 }
 
 void Motor::SetSpeed(int _PWM)
