@@ -113,8 +113,6 @@ void reset()
 {
   _Y.encodervalue = 0;
   _X.encodervalue = 0;
-  //Last_Yaw = V.readMpu(2);
-  //A.Shifted_Yaw = A.Yaw;
 
   Serial.print("In Reset");
   Serial.print("\tA.Yaw = ");  
@@ -125,6 +123,7 @@ void reset()
   pwmm1 = 0;
   pwmm2 = 0;
   pwmm3 = 0;
+  prev_error = 0;
 }
 
 /*
@@ -431,21 +430,9 @@ void TTP_Man(int dir)
 */
 void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
 {
+  //prev_error = error_ang; 
   error_ang = 5;
-  while (rate_change != 0 || abs(error_ang) > 2)
-  {
-    // read from port 1, send to port 0:
-    Yaw = _V.readMpu(2);
-
-    final_ang  = pow(-1, !dir) * req_angle + Shifted_Yaw ;
-    final_ang += ((final_ang < - 180) - (final_ang > 180)) * 360 ;
-
-    error_ang = final_ang - Yaw ;
-    error_ang += ((error_ang < -180) - (error_ang > 180)) * 360 ;
-
-    rate_change = abs(error_ang) - abs(prev_error);
-
-    if (dir)
+   if (!dir)
     {
       _M1.SetDirection(0);
       _M2.SetDirection(1);
@@ -458,54 +445,68 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
       _M3.SetDirection(1);
     }
 
+  while ( abs(error_ang) > 2)
+  {
+    // read from port 1, send to port 0:
+    Yaw = _V.readMpu(2);
+
+    final_ang  = pow(-1, !dir) * req_angle + Shifted_Yaw ;
+    final_ang += ((final_ang < - 180) - (final_ang > 180)) * 360 ;
+
+    error_ang = final_ang - Yaw ;
+    error_ang += ((error_ang < -180) - (error_ang > 180)) * 360 ;
+
     error_sum_ori = error_sum_ori + error_ang;
 
-    if ((rate_change) > 0 && rate_change != error_ang)
-    {
-      count++;
+    if(prev_error * error_ang >= 0){
+      flag = 1;
     }
+    
 
-    if (count > 0)
+    if (prev_error * error_ang < 0 && flag == 1)
     {
-      if ((rate_change) > 0)
-      {
         _M1.ToggleDirection();
         _M2.ToggleDirection();
         _M3.ToggleDirection();
-      }
+
+        flag = 0;
+        Serial.println(".........................................");
+          Serial.print("\tYaw: ");
+        Serial.print(Yaw);
+          Serial.print("\tShifted Yaw: ");
+          Serial.print(Shifted_Yaw);
+        Serial.print("\tError: ");
+        Serial.print(error_ang);
+        Serial.print("\tFinal: ");
+        Serial.print(final_ang);
+        Serial.print("\tM1_dir:  ");  
+        Serial.print(_M1.GetDirection());
+        Serial.print("\tM2_dir:  ");  
+        Serial.print(_M2.GetDirection());
+        Serial.print("\tM3_dir:  ");  
+        Serial.print(_M3.GetDirection());        
+        Serial.print("\tprevious:  ");  
+        Serial.print(prev_error);
+        Serial.print("\tdir:  ");
+        Serial.println(dir);
+        Serial.println(".........................................");
+
     }
+
 
     pwmm_ori = abs(error_ang) * KP_Orient;
 
+    /*         KI 
     if (abs(error_ang) < 20)
     {
       pwmm_ori += (KI_Angle * error_sum_ori);
     }
+    */
 
     if (pwmm_ori > (Maxpwm / 3))
       pwmm_ori = (Maxpwm / 3);
 
-    /********************************************* SERIAL PRINTING DATA ***************************************************/
-
-    //    Serial.print("\tYaw: ");
-    //    Serial.print(Yaw);
-          Serial.print("\tShifted Yaw: ");
-          Serial.println(Shifted_Yaw);
-    //    Serial.print("\tError: ");
-    //    Serial.print(error_ang);
-    //    Serial.print("\tFinal: ");
-    //    Serial.print(final_ang);
-    //    Serial.print("\tKp:  ");
-    //    Serial.print(KP_Orient);
-    //    Serial.print("\tPWM:  ");
-    //    Serial.print(pwmm_ori);
-    //    Serial.print("\trate:  ");
-    //    Serial.print(rate_change);
-    //    Serial.print("\tprevious:  ");  Serial.print("In Reset");
-    //    Serial.print(prev_error);
-    //    Serial.print("\tdir:  ");
-    //    Serial.println(dir);
-
+    
 
     pwmm_ori1 = pwmm_ori;
     pwmm_ori2 = pwmm_ori;
@@ -516,13 +517,39 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
     _M3.SetSpeed(pwmm_ori3);
 
     prev_error = error_ang;
+
+    /********************************************* SERIAL PRINTING DATA ***************************************************/
+
+        Serial.print("\tYaw: ");
+        Serial.print(Yaw);
+          Serial.print("\tShifted Yaw: ");
+          Serial.print(Shifted_Yaw);
+        Serial.print("\tError: ");
+        Serial.print(error_ang);
+        Serial.print("\tFinal: ");
+        Serial.print(final_ang);
+//        Serial.print("\tKp:  ");
+//        Serial.print(KP_Orient);
+//        Serial.print("\tPWM:  ");
+//        Serial.print(pwmm_ori);
+//        Serial.print("\trate:  ");
+//        Serial.print(rate_change);
+        Serial.print("\tM1_dir:  ");  
+        Serial.print(_M1.GetDirection());
+        Serial.print("\tM2_dir:  ");  
+        Serial.print(_M2.GetDirection());
+        Serial.print("\tM3_dir:  ");  
+        Serial.print(_M3.GetDirection());        
+        Serial.print("\tprevious:  ");  
+        Serial.print(prev_error);
+        Serial.print("\tdir:  ");
+        Serial.println(dir);
+
   }
 
   _M1.SetSpeed(0);
   _M2.SetSpeed(0);
   _M3.SetSpeed(0);
-
-  count = 0;
 }
 
 };
