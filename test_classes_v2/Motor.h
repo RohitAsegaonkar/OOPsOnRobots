@@ -11,46 +11,56 @@
 class Motor
 {
     private:
-    int _DirPin;
-    bool _Dir;
-    int _PWM_Pin;
-    int _PWM;
 
-    
+        int _DirPin;
+        bool _Dir;
+        int _PWM_Pin;
+        int _PWM;
 
     public:
 
-    Motor()
-    {
+        Motor()
+        {
 
-    }
-    
-    Motor(int _DirPin_, bool _Dir_, int _PWM_Pin_)
-    {
-        _DirPin = _DirPin_;
-        _Dir = _Dir_;
-        _PWM_Pin = _PWM_Pin_;
-        
-        pinMode(_DirPin,OUTPUT);
-        pinMode(_PWM_Pin,OUTPUT);
-    }
+        }
 
-    void SetDirection();
-    void ToggleDirection();
-    void SetSpeed(int _PWM);
+        Motor(int _DirPin_, bool _Dir_, int _PWM_Pin_)
+        {
+            _DirPin = _DirPin_;
+            _Dir = _Dir_;
+            _PWM_Pin = _PWM_Pin_;
 
+            pinMode(_DirPin,OUTPUT);
+            pinMode(_PWM_Pin,OUTPUT);
+        }
+
+        void SetDirection();
+        void SetDirection(bool _dir);
+        void ToggleDirection();
+        void SetSpeed(int _PWM);
+        bool GetDirection();
 };
 
 void Motor::ToggleDirection()
 {
     _Dir = !(_Dir);
     digitalWrite(_DirPin,_Dir);
+}
 
+bool Motor::GetDirection()
+{
+  return _Dir;
 }
 
 void Motor::SetDirection()
 {
     digitalWrite(_DirPin,_Dir);
+}
+
+void Motor::SetDirection(bool _dir)
+{   
+    _Dir = _dir;
+    digitalWrite(_DirPin, _Dir);
 }
 
 void Motor::SetSpeed(int _PWM)
