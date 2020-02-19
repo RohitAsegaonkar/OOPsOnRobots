@@ -25,6 +25,7 @@ class Manual
     #define Maxpwm 200.00
     #define basePwm 150
     int pwmm1, pwmm2, pwmm3;
+    bool flag = 1;
     /**********************************************************************************************************************/
 
     /************************************* forwardManY() Function Variables ***********************************************/
@@ -477,12 +478,12 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
         Serial.print(error_ang);
         Serial.print("\tFinal: ");
         Serial.print(final_ang);
-        Serial.print("\tM1_dir:  ");  
-        Serial.print(_M1.GetDirection());
-        Serial.print("\tM2_dir:  ");  
-        Serial.print(_M2.GetDirection());
-        Serial.print("\tM3_dir:  ");  
-        Serial.print(_M3.GetDirection());        
+//        Serial.print("\tM1_dir:  ");  
+//        Serial.print(_M1.GetDirection());
+//        Serial.print("\tM2_dir:  ");  
+//        Serial.print(_M2.GetDirection());
+//        Serial.print("\tM3_dir:  ");  
+//        Serial.print(_M3.GetDirection());        
         Serial.print("\tprevious:  ");  
         Serial.print(prev_error);
         Serial.print("\tdir:  ");
@@ -532,12 +533,12 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
 //        Serial.print(pwmm_ori);
 //        Serial.print("\trate:  ");
 //        Serial.print(rate_change);
-        Serial.print("\tM1_dir:  ");  
-        Serial.print(_M1.GetDirection());
-        Serial.print("\tM2_dir:  ");  
-        Serial.print(_M2.GetDirection());
-        Serial.print("\tM3_dir:  ");  
-        Serial.print(_M3.GetDirection());        
+//        Serial.print("\tM1_dir:  ");  
+//        Serial.print(_M1.GetDirection());
+//        Serial.print("\tM2_dir:  ");  
+//        Serial.print(_M2.GetDirection());
+//        Serial.print("\tM3_dir:  ");  
+//        Serial.print(_M3.GetDirection());        
         Serial.print("\tprevious:  ");  
         Serial.print(prev_error);
         Serial.print("\tdir:  ");

@@ -38,6 +38,7 @@ class Motor
         void SetDirection(bool _dir);
         void ToggleDirection();
         void SetSpeed(int _PWM);
+        
 };
 
 void Motor::ToggleDirection()

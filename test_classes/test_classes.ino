@@ -3,9 +3,13 @@
 #include "Motor.h"
 #include "Manual.h"
 #include "Piston.h"
+#include "Autonomous.h"
 
-Encoder X(21, 50);
-Encoder Y(2, 52);
+#define manual 0
+#define autonomous 1
+
+Encoder X(2, 29);
+Encoder Y(3, 31);
 
 Mpu mpu;
 
@@ -14,7 +18,8 @@ Motor M2(38, 1, 12);
 Motor M3(36, 1, 11);
 
 Manual A(M1, M2, M3, mpu, X, Y);
-
+Autonomous Auto(M1, M2, M3, mpu, X, Y);
+  
 Piston Gripper(41, 39), Throwing(37, 35);
 
 /****************************************** PID Constants for forward function ******************************************/
@@ -72,14 +77,26 @@ void setup()
   Serial2.begin(115200);
   Serial3.begin(115200);
 
+
+  
+/*
   pinMode(42,OUTPUT);
   pinMode(44,OUTPUT);
   pinMode(46,OUTPUT);
   pinMode(48,OUTPUT);
+*/
+  attachInterrupt(0,UpdateXEncoder,RISING); 
+  attachInterrupt(1,UpdateYEncoder,RISING);
 }
 
 void loop()
 {
+  #if autonomous
+  Auto.forwardAutoY(200, 0.0, 0.0, ((Maxpwm/200)), 0.00, 0.00,0.00, 0.00, 0.00);
+  delay(2000);
+  #endif
+    
+  #if manual 
   if (Serial3.available())
   {
     command = Serial3.read();
@@ -215,7 +232,7 @@ void loop()
       break;
 
     case 'b':
-      //Gripper.Retract();
+      //Gripper.Retract();u
       break;
 
     case 'x':
@@ -228,7 +245,10 @@ void loop()
       M3.SetSpeed(0);
 
       Serial.println("In Default");
+ 
   }
   
   prevCommand = command;
+        
+   #endif   
 }

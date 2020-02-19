@@ -39,7 +39,19 @@ class Encoder
             encodervalue++;
         if (b == 0)
             encodervalue--;
+
+        //Serial.println(encodervalue);
     }      
+
+    void info(){
+      Serial.print("a:");
+      Serial.print(a);
+      Serial.print("\t");
+      Serial.print("b:");
+      Serial.print(b);
+      Serial.print("\t");
+      Serial.print(encodervalue);
+    }
 
 };
 #endif

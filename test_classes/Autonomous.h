@@ -8,158 +8,205 @@
 class Autonomous
 {
     private :
+    /******************************************* Creation of Objects ******************************************************/
+    Encoder _AutoX;
+    Encoder _AutoY;
+    Mpu _AutoMpu;
+    Motor _AutoM1, _AutoM2, _AutoM3;
+    /**********************************************************************************************************************/
+    
+    /********************************************** MPU Variables *********************************************************/
+    float AutoShifted_Yaw = 0;              //Variable to store the changed/shifted value of yaw as set point for next function
+    float AutoYaw = 0;                      //Variable to store the resolved value of yaw from -180 to 180
+    float Yaw_ref = 0;
+    float final_ang = 0;                    //Variable to store the value of the final angle in the TurnMan function
+    float correction_angle = 0;             //Variable to store the correction angle in th eself orient function
+    /**********************************************************************************************************************/
+
+    /*********************************************** PWM Values ***********************************************************/
+    #define Maxpwm 200.00                   //Maximum pwm as constraint in the entire code
+    int a_basePwm;
+    int a_pwmm1, a_pwmm2, a_pwmm3;
+    /**********************************************************************************************************************/
+
+    /************************************* forwardManY() Function Variables ***********************************************/
+    float a_error_forward;                                //Variable to store the value of the MPU as error
+    float a_error_encoder_forward;                        //Lateral shift error in forward direction
+    float a_pwm_encoder_forward2, a_pwm_encoder_forward3; //PWM due to lateral shift in forward direction
+    float a_error_sum_forward = 0;                        //Adding previous errors for implementing Ki                                                                           
+    float a_current_forward, a_errorDist_forward;         //Current values of encoder and distance error in forward direction.                                                
+    float a_prev_error_forward;
+    float a_distanceCovered_forward;       //Distance Covered in forward
+    float a_requiredDistance_forward;      //Desired distance in forward 
+    float a_rateChange_forward = 0;
+    /*** A_Forward() Function Variables ***/
+
+    /**********************************************************************************************************************/
+
+    /************************************** backwardManY() Function Variables *********************************************/
+    float a_error_back;                                                                         //Variable to store the value of the MPU as error.
+    float a_error_encoder_back;                                                                 //Lateral shift error in back direction
+    float a_pwm_encoder_back;                                                                   //PWM due to lateral shift in back direction
+    float a_error_sum_back;                                                                     //Adding previous errors for implementing Ki                                             
+    float a_current_back, a_errorDist_back;                                                       //Current values of encoder and distance error in back direction.
+    float a_distanceCovered_back;                                                               //Distance Covered in back
+    float a_requiredDistance_back;                                                              //Desired distance in back
+
+    /*** A_Backward() Function Variables ***/
+    /**********************************************************************************************************************/
+
+    /*************************************** leftManX() Function Variables ************************************************/
+    float error_encoder_left;
+    float error_sum_left;
+    float a_error_left;
+    float a_current_left; 
+    float a_errorDist_left;                                                       //Current values of encoder and distance error in left direction.  
+    float a_prev_error_left;
+    float a_distanceCovered_left;                                                               //Distance Covered in left
+    float a_requiredDistance_left;                                                              //Desired distance in left
+    float a_error_encoder_left = 0;                                                                 //Lateral shift error in left direction
+    float a_pwm_encoder_left1,a_pwm_encoder_left2,a_pwm_encoder_left3;                                                                   //PWM due to lateral shift in left direction
+    float a_error_sum_left = 0;                                                                     //Adding previous errors for implementing Ki
+    float a_rateChange_left = 0;
+    /**********************************************************************************************************************/
+
+    /****************************************** rightManX() Function Variables ********************************************/
+    
+    float a_error_right;                                                                        //Variable to store the value of the MPU as error.
+    float a_current_right;
+    float a_errorDist_right;                                                     //Current values of encoder and distance error in right direction. 
+    float a_distanceCovered_right;                                                              //Distance Covered in right
+    float a_prev_error_right;
+    float a_requiredDistance_right;                                                             //Desired distance in right
+    float a_error_encoder_right;                                                                //Lateral shift error in right direction
+    float a_pwm_encoder_right;                                                                  //PWM due to lateral shift in right direction
+    float a_error_sum_right;                                                                    //Adding previous errors for implementing Ki
+    float a_rateChange_right = 0;
+    /**********************************************************************************************************************/
+
+    /***************************************** TurnMan() Function Variables ***********************************************/
+    float req_angle = 0.0;
+    float error_ang = 3;
+    float error_sum_ori;
+    float prev_error = 0;
+    /**********************************************************************************************************************/
+
 
     public :
+
+    Autonomous(Motor m1, Motor m2, Motor m3, Mpu v, Encoder x, Encoder y)
+    {
+      //Assigning the Motor Object
+      _AutoM1 = m1;
+      _AutoM2 = m2;
+      _AutoM3 = m3;
+      //Assigning the Encoder Object
+      _AutoX = x;
+      _AutoY = y;
+      //Assigning the MPU object
+      _AutoMpu = v;
+
+      _AutoY.info();
+    }    
+
+
+void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, float a_kp_strm3_forward, float a_kp_dist_forward, float a_kp2_encoder_forward,  float a_kp3_encoder_forward, float a_ki_dist_forward, float a_kd2_dist_forward, float a_kd3_dist_forward)
+{
+  _AutoX.encodervalue = 0;                                                                          //Shifting the origin by initializing both the encoder values to zero
+  _AutoY.encodervalue = 0;
+  a_prev_error_forward = a_requiredDistance_forward;
+  while (a_distanceCovered_forward < a_requiredDistance_forward)                              //Execute the function till required distance is not reached
+  {    
+    AutoYaw = _AutoMpu.readMpu(2);
+    a_error_forward = AutoYaw - AutoShifted_Yaw;                                                      //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function
+
+    a_current_forward = abs( _AutoY.encodervalue);                                                   //Storing the value of the y encoder
+    //Serial.println(a_current_forward);
+    a_distanceCovered_forward = a_current_forward * 0.05236;                                  //Multiplying the value of the encoder by the circumference of the dummy wheel
+
+    a_errorDist_forward = a_requiredDistance_forward - a_distanceCovered_forward;             //Calculating the error in distance
+    a_error_sum_forward = a_errorDist_forward + a_error_sum_forward;                          //Calculating the sum of the errors
+
+    a_basePwm = abs(a_errorDist_forward) * a_kp_dist_forward;                                 //Calculating the basepwm in proportion with the error
+
+    a_error_encoder_forward = _AutoX.encodervalue;                                                  //Error for locomotion in y direction is given by the x encoder
+
+    a_pwm_encoder_forward2 = a_kp2_encoder_forward * (a_error_encoder_forward);               //Calculating the pwm error due to Lateral Shift
+    a_pwm_encoder_forward3 = a_kp3_encoder_forward * (a_error_encoder_forward);               //Calculating the pwm error due to Lateral Shift
+
+    a_rateChange_forward = a_prev_error_forward - a_errorDist_forward;                        //Calculating the rate of change of error in distance
+
+    a_pwmm2 = a_basePwm  + a_kp_strm2_forward * (a_error_forward) + a_pwm_encoder_forward2 ;    //Calculating the pwm for motor 2 according to the equations of velocities
+    a_pwmm3 = a_basePwm  - a_kp_strm3_forward * (a_error_forward) - a_pwm_encoder_forward3 ;    //Calculating the pwm for motor 3 according to the equations of velocities
+
+    if (a_errorDist_forward < ((a_requiredDistance_forward / 10.00) + 10))                    //Increasing the value of kp for angular deviation for motor 2, 10 cm before applying D so that it corrects itself
+    {
+      a_kp_strm2_forward += 0.005;
+    }
+
+    if (a_errorDist_forward < (a_requiredDistance_forward / 10.00))                          //If Error is less than One Ninth of the Total Distance than apply D
+    {
+      a_pwmm2 -= (a_kd2_dist_forward * a_rateChange_forward);
+      a_pwmm3 -= (a_kd3_dist_forward * a_rateChange_forward);
+    }
+
+    if (a_pwmm2 < 0 )                                                                          //If PWM of any wheel becomes negative make it zero
+      a_pwmm2 = 0;
+
+    if (a_pwmm3 < 0)
+      a_pwmm3 = 0;
+
+
+    if (a_pwmm2 > Maxpwm)                                                                       //The pwm should not exceed the desired maximum pwm
+      a_pwmm2 = Maxpwm;
+
+    if (a_pwmm3 > Maxpwm)
+      a_pwmm3 = Maxpwm;
     
-/********** Direction pins **********/
-#define dir1 34                                                                           //Direction pin for motor1
-#define dir3 30                                                                           //Direction pin for motor3
-#define dir2 28                                                                           //Direction pin for motor2
-/********** Direction pins **********/
+     _AutoM1.SetDirection(0);
+     _AutoM2.SetDirection(1);
+     _AutoM3.SetDirection(1);
+   
+     _AutoM1.SetSpeed(0);
+     _AutoM2.SetSpeed(abs(a_pwmm2));
+     _AutoM3.SetSpeed(abs(a_pwmm3));
 
-/************* PWM pins *************/
-#define pwm1 9                                                                            //PWM pin for motor1
-#define pwm3 7                                                                            //PWM pin for motor3
-#define pwm2 6                                                                            //PWM pin for motor2
-/************* PWM pins *************/
 
-/************ PWM Values ************/
-#define Maxpwm 200.00
-#define Maxpwm1 180.00
-int a_basePwm;
-int pwmm1, pwmm2, pwmm3;
-/************ PWM Values ************/
+    /********************************************* SERIAL PRINTING DATA ***************************************************/
 
-/********* Values of Yaw from MPU6050 *********/
-int8_t yaw = 0;                                                                           // yaw values from MPU6050 using Serial Communications
-float Yaw = 0, Shifted_Yaw = 0, Yaw_ref = 0;
-int final_ang = 0,correction_angle = 0;
-//Variable to store the resolved value of yaw from -180 to 180
-/********* Values of Yaw from MPU6050 *********/
+//    Serial.print("\tYaw: ");
+//    Serial.print(AutoYaw);
+//    Serial.print("\tError: ");
+//    Serial.print(a_error_forward);
+//    Serial.print("\tError encoder: ");
+//    Serial.print(a_error_encoder_forward);
+//    Serial.print("\tencodervalue2 :      ");
+     // Serial.print(_AutoX.encodervalue);
+//    Serial.print("\tdistance covered :      ");
+//    Serial.print(a_distanceCovered_forward);
+//    Serial.print("\tPWM:  ");
+//    Serial.print(a_pwmm1);
+//    Serial.print("   ");
+//    Serial.print(a_pwmm2);
+//    Serial.print("   ");
+//    Serial.println(a_pwmm3);
 
-/***************************************************************************************************************************/
-/********************************************** End of Common Variables ****************************************************/
-/***************************************************************************************************************************/
+    a_prev_error_forward = a_errorDist_forward;                                               //Storing the value of the previoud error inorder to calculate the rate of change of error in distance
+  }
+  if (a_distanceCovered_forward >= a_requiredDistance_forward)                                  // Stoping the bot after the required distance is reached
+  {
+     _AutoM1.SetSpeed(0);
+     _AutoM2.SetSpeed(0);
+     _AutoM3.SetSpeed(0);
 
-/*****************************************************************************************************************************************/
-/********************************************* Start of Variables From A_2W_Loc.h File ***************************************************/
-/*****************************************************************************************************************************************/
+    delay(100);
+  }
+  //Setting the reference value for the next function that is called
+  a_distanceCovered_forward = 0;                                                                //Flushing the value of the variable
+}
 
-/******* Variables for the encoder *******/
-volatile int encodervalue1, encodervalue2;                                                // Count of pulses from encoder 1 and encoder 2
-volatile int a, b, c, d;
-/******* Variables for the encoder *******/
 
-/************ Encoder Pins ************/
-#define encoderPin1 2                                                                     //Interupt pin (A channel) for encoder1
-#define encoderPin2 21                                                                    //Interrupt pin (A channel) for encoder2
-#define comparePinA 50                                                                    // comparepin B channel for encoder1
-#define comparePinB 52                                                                    //comparepin B channel for encoder2
-/************ Encoder Pins ************/
 
-/*** A_Forward() Function Variables ***/
-
-/*float a_kp_dist_forward;                                                                  //Kp is given in proportion to the maxpwm and max error possible
-float a_kp_encoder_forward;                                                               //Proportionality constant for the lateral error
-float a_ki_dist_forward;                                                                  //Ki for distance
-float a_kp_strm2_forward;                                                                 //Proportionality constant for the angular error for motor 2
-float a_kp_strm3_forward;                                                                 //Proportionality constant for the angular error for motor 3
-float a_kd2_dist_forward;
-float a_kd3_dist_forward;
-*/
-
-float a_error_forward;                                                                    //Variable to store the value of the MPU as error
-float a_error_encoder_forward;                                                            //Lateral shift error in forward direction
-float a_pwm_encoder_forward2, a_pwm_encoder_forward3;                                     //PWM due to lateral shift in forward direction
-float a_error_sum_forward = 0;                                                                //Adding previous errors for implementing Ki                                                                           
-float a_current_forward, a_errorDist_forward;                                               //Current values of encoder and distance error in forward direction.                                                
-float a_prev_error_forward;
-float a_distanceCovered_forward;                                                          //Distance Covered in forward
-float a_requiredDistance_forward;                                                         //Desired distance in forward 
-float a_rateChange_forward = 0;
-/*** A_Forward() Function Variables ***/
-
-/*** A_Backward() Function Variables ***/
-/*
-float a_kp_dist_back;                                                                     //Kp is given in proportion to the maxpwm and max error possible
-float a_ki_dist_back;                                                                     //Ki for distance
-float a_kp_strm2_back;                                                                    //Proportionality constant for the angular error for motor 2
-float a_kp_strm3_back;                                                                    //Proportionality constant for the angular error for motor 3
-*/
-
-float a_error_back;                                                                         //Variable to store the value of the MPU as error.
-float a_error_encoder_back;                                                                 //Lateral shift error in back direction
-float a_pwm_encoder_back;                                                                   //PWM due to lateral shift in back direction
-float a_error_sum_back;                                                                     //Adding previous errors for implementing Ki                                             
-float a_current_back, a_errorDist_back;                                                       //Current values of encoder and distance error in back direction.
-float a_distanceCovered_back;                                                               //Distance Covered in back
-float a_requiredDistance_back;                                                              //Desired distance in back
-
-/*** A_Backward() Function Variables ***/
-
-/*****************************************************************************************************************************************/
-/********************************************** End of Variables From A_2W_Loc.h File ****************************************************/
-/*****************************************************************************************************************************************/
-
-/*****************************************************************************************************************************************/
-/********************************************* Start of Variables From A_3W_Loc.h File ***************************************************/
-/*****************************************************************************************************************************************/
-
-/***** A_Left() Function Variables *****/
-/*
-float a_kp_dist_left;
-float a_kp1_encoder_left,a_kp2_encoder_left,a_kp3_encoder_left;                                                                    //Kp is given in proportion to the maxpwm and max error possible
-float a_kp_strm1_left;                                                                      //Proportionality constant for the angular error for motor 1
-float a_kp_strm2_left;                                                                      //Proportionality constant for the angular error for motor 2
-float a_kp_strm3_left;                                                                      //Proportionality constant for the angular error for motor 3
-float a_ki_dist_left;                                                                       //Ki for distance
-float a_kd1_dist_left;
-float a_kd2_dist_left;
-float a_kd3_dist_left;
-*/
-float a_errorDist_left;
-float a_error_left;
-float a_current_left, errorDist_left;                                                       //Current values of encoder and distance error in left direction.  
-float a_prev_error_left;
-float a_distanceCovered_left;                                                               //Distance Covered in left
-float a_requiredDistance_left;                                                              //Desired distance in left
-float a_error_encoder_left = 0;                                                                 //Lateral shift error in left direction
-float a_pwm_encoder_left1,a_pwm_encoder_left2,a_pwm_encoder_left3;                                                                   //PWM due to lateral shift in left direction
-float a_error_sum_left = 0;                                                                     //Adding previous errors for implementing Ki
-float a_rateChange_left = 0;
-
-/***** A_Left() Function Variables *****/
-
-/***** A_Right() Function Variables *****/
-
-float a_error_right;                                                                        //Variable to store the value of the MPU as error.
-float a_kp_dist_right;
-float a_kp_encoder_right;                                                                   //Kp is given in proportion to the maxpwm and max error possible
-float a_kp_strm1_right;                                                                     //Proportionality constant for the angular error for motor 1
-float a_kp_strm2_right;                                                                     //Proportionality constant for the angular error for motor 2
-float a_kp_strm3_right;                                                                     //Proportionality constant for the angular error for motor 3
-float a_ki_dist_right;                                                                      //Ki for distance
-float a_kd1_dist_right;
-float a_kd2_dist_right;
-float a_kd3_dist_right;
-
-float a_errorDist_right;
-float a_current_right, errorDist_right;                                                     //Current values of encoder and distance error in right direction. 
-float a_distanceCovered_right;                                                              //Distance Covered in right
-float a_prev_error_right;
-float a_requiredDistance_right;                                                             //Desired distance in right
-float a_error_encoder_right;                                                                //Lateral shift error in right direction
-float a_pwm_encoder_right;                                                                  //PWM due to lateral shift in right direction
-float a_error_sum_right;                                                                    //Adding previous errors for implementing Ki
-float a_rateChange_right = 0;
-
-/***** A_Right() Function Variables *****/
-
-/*****************************************************************************************************************************************/
-/********************************************** End of Variables From A_3W_Loc.h File ****************************************************/
-/*****************************************************************************************************************************************/
-
-void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, float a_kp_strm3_forward, float a_kp_dist_forward, float a_kp2_encoder_forward,  float a_kp3_encoder_forward, float a_ki_dist_forward, float a_kd2_dist_forward, float a_kd3_dist_forward);
 void backwardAutoY();
 void rightAutoX();
 void leftAutoX();   
