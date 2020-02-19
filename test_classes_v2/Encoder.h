@@ -40,9 +40,6 @@ class Encoder
         if (b == 0)
             encodervalue--;
 
-            Serial.print("Encoder:");
-            Serial.println(encodervalue);
-            
     }      
 
 };
