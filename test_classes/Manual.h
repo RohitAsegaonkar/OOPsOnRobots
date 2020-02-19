@@ -17,49 +17,49 @@ class Manual
     /**********************************************************************************************************************/
 
     /********************************************** MPU Variables *********************************************************/
-    float Shifted_Yaw = 0;              //Variable to store the changed/shifted value of yaw as set point for next function
-    float Yaw = 0;                      //Variable to store the resolved value of yaw from -180 to 180
+    float Yaw = 0;                                                                          //Variable to store the resolved value of yaw from -180 to 180
+    float Shifted_Yaw = 0;                                                                  //Variable to store the changed/shifted value of yaw as set point for next function
     /**********************************************************************************************************************/
 
-    /*********************************************** PWM Values ***********************************************************/
+    /********************************************* PWM Values/Variables ***************************************************/
     #define Maxpwm 200.00
     #define basePwm 150
     int pwmm1, pwmm2, pwmm3;
     /**********************************************************************************************************************/
 
     /************************************* forwardManY() Function Variables ***********************************************/
-    float error_forward;                 //Variable to store the value of the_X-Enc encoder as error.
-    float error_encoder_forward;         //Variable    
-    float pwm_encoder_forward;
-    float error_sum_forward;
+    float error_encoder_forward;                                                            //Variable to store the value of the_X-Enc encoder as error.
+    float error_forward;                                                                    //Variable to store error due to MPU
+    float pwm_encoder_forward;                                                              //Variable to store PWM value due to error in encoder value   
+    float error_sum_forward;                                                                //Variable to store sum of errors in encoder value 
     /**********************************************************************************************************************/
 
     /************************************** backwardManY() Function Variables *********************************************/
-    float error_back;
-    float error_encoder_back;
-    float pwm_encoder_back;
-    float error_sum_back;
+    float error_back;                                                                       //Variable to store error due to MPU
+    float error_encoder_back;                                                               //Variable to store encoder value
+    float pwm_encoder_back;                                                                 //Variable to store PWM value due to error in encoder value
+    float error_sum_back;                                                                   //Variable to store sum of errors in encoder value 
     /**********************************************************************************************************************/
 
     /*************************************** leftManX() Function Variables ************************************************/
-    float error_left;                                     //Variable to store the value of the_X-Enc encoder as error.
-    float error_encoder_left;
-    float pwm_encoder_left;
-    float error_sum_left;
+    float error_left;                                                                       //Variable to store error due to MPU                                   
+    float error_encoder_left;                                                               //Variable to store encoder value
+    float pwm_encoder_left;                                                                 //Variable to store PWM value due to error in encoder value
+    float error_sum_left;                                                                   //Variable to store sum of errors in encoder value 
     /**********************************************************************************************************************/
 
     /****************************************** rightManX() Function Variables ********************************************/
-    float error_right;
-    float error_encoder_right;
-    float pwm_encoder_right;
-    float error_sum_right;
+    float error_right;                                                                      //Variable to store error due to MPU
+    float error_encoder_right;                                                              //Variable to store encoder value
+    float pwm_encoder_right;                                                                //Variable to store PWM value due to error in encoder value  
+    float error_sum_right;                                                                  //Variable to store sum of errors in encoder value 
     /**********************************************************************************************************************/
 
-    /***************************************** TurnMan() Function Variables ***********************************************/
-    float req_angle = 0.0;
-    float error_ang = 3;
-    float error_sum_ori;
-    float prev_error = 0;
+    /******************************************** TurnMan() Function Variables ********************************************/
+    float req_angle = 0.0;                                                                  //Variable to store the required angle for orientation control
+    float error_ang = 3;                                                                    //Variable to store error in required angle and current angle
+    float error_sum_ori;                                                                    //Variable to store sum of errors in required angle and current angle
+    float prev_error = 0;                                                                   //Variable to store the error of previous itteration 
     /**********************************************************************************************************************/
 
   public:
@@ -71,15 +71,20 @@ class Manual
 
     Manual(Motor m1, Motor m2, Motor m3, Mpu v, Encoder x, Encoder y)
     {
-      //Assigning the Motor Object
+      /******************************************** Assigning the Motor Object ********************************************/
       _M1 = m1;
       _M2 = m2;
       _M3 = m3;
-      //Assigning the Encoder Object
+      /********************************************************************************************************************/
+
+      /******************************************** Assigning the Encoder Object ******************************************/
       _X = x;
       _Y = y;
-      //Assigning the MPU object
+      /********************************************************************************************************************/
+
+      //********************************************* Assigning the MPU object ********************************************/
       _V = v;
+      /********************************************************************************************************************/
     }
 
     int final_ang = 0, correction_angle = 0;
@@ -88,8 +93,7 @@ class Manual
     //PWM Given to motors for rotating
     float pwmm_ori;
 
-    //PWM Values given to each wheel
-    int pwmm_ori1, pwmm_ori2, pwmm_ori3;
+    int pwmm_ori1, pwmm_ori2, pwmm_ori3;                                                            
 
 /*
     Function Name       : UpdateShiftedYaw(float Yaw_ref)
@@ -127,8 +131,8 @@ void reset()
 
 /*
     Function Name       : forwardManY()
-    Input               : Required distance(requiredDistance_forward) for which function is to be executed,Proportionality constants of Each Motors(kp_strm1_forward,KP_M2_Forward,KP_M3_Forward),
-                          Encoders(KP_Enc_Forward) and Distance constant(kp_dist_forward,ki_dist_forward)
+    Input               : Proportionality constants of Each Motors(kp_strm2_forward,kp_strm3_forward),
+                          Encoders(kp_encoder_forward)
     Output              : Motor 2 and 3 will move with same pwm and Motor 1 will have zero PWM. Bot will move in forward Direction(along Motor 1).
     Logic               : By giving same PWM to Motors 2 and 3 and Motor 1 will have zero PWM,the bot will move in forward direction. MPU and two XY Encoders are used for FEEDBACK of System.
                           PID is implemented for precise movement.
@@ -137,14 +141,14 @@ void reset()
 void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward)
 {
   Serial.println("In F");
-  Yaw = _V.readMpu(2);                          // Reading Mpu Values
-  error_forward = Yaw - Shifted_Yaw;
+  Yaw = _V.readMpu(2);                                                                      // Reading Mpu Values
+  error_forward = Yaw - Shifted_Yaw;                                                        // Calculating the angular shift of the bot.
 
-  error_encoder_forward = _X.encodervalue;
-  pwm_encoder_forward = kp_encoder_forward * (error_encoder_forward);
+  error_encoder_forward = _X.encodervalue;                                                  // Storing the encoder value of X - Encoder as bot's lateral shift
+  pwm_encoder_forward = kp_encoder_forward * (error_encoder_forward);                       // Calculating the PWM according to the error in X - Encoder
 
-  pwmm2 = basePwm + kp_strm2_forward * (error_forward) - pwm_encoder_forward ;
-  pwmm3 = basePwm - kp_strm3_forward * (error_forward) + pwm_encoder_forward + 6;
+  pwmm2 = basePwm + kp_strm2_forward * (error_forward) - pwm_encoder_forward ;              // Calculating the pwm for motor 2 according to the equations of velocities
+  pwmm3 = basePwm - kp_strm3_forward * (error_forward) + pwm_encoder_forward + 6;           // Calculating the pwm for motor 3 according to the equations of velocities
 
   /*if (error_forward < 5)
     {
@@ -191,8 +195,8 @@ void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encode
 
 /*
     Function Name    :  backwardManY()
-    Input            :  Required distance(requiredDistance_back) for which function is to be executed,Proportionality constants of Each Motors(kp_strm1_back,KP_M2_Backward,KP_M3_Backward),
-                        Encoders(KP_Enc_Backward) and Distance constant(kp_dist_back,ki_dist_back)
+    Input            :  Proportionality constants of Each Motors(KP_M2_Backward,KP_M3_Backward),
+                        Encoders(KP_Enc_Backward).
     Output           :  Motor 2 and 3 will move with same pwm and Motor 1 will have zero PWM. Bot will move in back Direction(along Motor 1 backward).
     Logic            :  By giving same PWM to Motors 2 and 3 and Motor 1 will have zero PWM,the bot will move in backward direction. MPU and two XY Encoders are used for FEEDBACK of System.
                         PID is implemented for precise movement.
@@ -200,9 +204,8 @@ void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encode
 */
 void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward)
 {
-  Yaw = _V.readMpu(2);                         // Reading Mpu Values
-  error_back = Yaw - Shifted_Yaw;
-
+  Yaw = _V.readMpu(2);                                                                     // Reading Mpu Values
+  error_back = Yaw - Shifted_Yaw;                                                           
   error_encoder_back = _X.encodervalue;
   pwm_encoder_back = KP_Enc_Backward * (error_encoder_back);
 
@@ -248,8 +251,8 @@ void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backw
 
 /*
     Function Name         : leftManX()
-    Input                 : Required distance(requiredDistance_left) for which function is to be executed,Proportionality constants of Each Motors(KP_M1_Left,KP_M2_Left,KP_M3_Left),
-                            Encoders(KP_Enc_Left) and Distance constant(kp_dist_left,ki_dist_left)
+    Input                 : Proportionality constants of Each Motors(KP_M1_Left,KP_M2_Left,KP_M3_Left),
+                            Encoders(KP_Enc_Left)
     Output                : Motor 2 and 3 will move with same pwm and Motor 1 will move with double the pwm of rest two Motors. Bot will move in Left Direction.
     Logic                 : By giving same PWM to Motors 2 and 3 and giving double PWM to Motor 1,the bot will move in left direction. MPU and two XY Encoders are used for FEEDBACK of System.
                             PID is implemented for precise movement.
@@ -258,8 +261,7 @@ void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backw
 void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left)
 {
   Yaw = _V.readMpu(2);
-  error_left = Yaw - Shifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function                       //Calculating the basepwm in proportion with the error
-
+  error_left = Yaw - Shifted_Yaw;                                                 //Calculate the angular shift of the bot.                       
   error_encoder_left = _Y.encodervalue;                                           //Error for locomotion in X direction is given by the y encoder
   pwm_encoder_left = KP_Enc_Left * (error_encoder_left);                          //Calculating the pwm error
 
@@ -309,8 +311,8 @@ void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc
 }
 /*
     Function Name        :  rightManX()
-    Input                :  Required distance(requiredDistance_right) for which function is to be executed,Proportionality constants of Each Motors(KP_M1_Right,KP_M2_Right,KP_M3_Right),
-                            Encoders(KP_Enc_Right) and Distance constant(kp_dist_right,ki_dist_right)
+    Input                :  Proportionality constants of Each Motors(KP_M1_Right,KP_M2_Right,KP_M3_Right),
+                            Encoders(KP_Enc_Right)
     Output               :  Motor 2 and 3 will move with same pwm and Motor 1 will move with double the pwm of rest two Motors. Bot will move in Right Direction.
     Logic                :  By giving same PWM to Motors 2 and 3 and giving double PWM to Motor 1,the bot will move in right direction. MPU and two XY Encoders are used for FEEDBACK of System.
                             PID is implemented for precise movement.
@@ -319,13 +321,13 @@ void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc
 void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right)
 {
   Yaw = _V.readMpu(2);
+  error_right = Yaw - Shifted_Yaw;                                                 //Calculate the angular shift of the bot.
+  error_encoder_right = _Y.encodervalue;                                           //Error for locomotion in X direction is given by the y encoder
+  pwm_encoder_right = KP_Enc_Right * (error_encoder_right);                        //Calculating the pwm error
 
-  error_encoder_right = _Y.encodervalue;
-  pwm_encoder_right = KP_Enc_Right * (error_encoder_right);
-
-  pwmm1 = basePwm + KP_M1_Right * (error_right) - pwm_encoder_right;
-  pwmm2 = (basePwm - KP_M2_Right * (error_right) + pwm_encoder_right) / 2 + 12;
-  pwmm3 = (basePwm - KP_M3_Right * (error_right) + pwm_encoder_right) / 2 + 12;
+  pwmm1 = basePwm + KP_M1_Right * (error_right) - pwm_encoder_right;               //Calculating the pwm for motor 1 according to the equations of velocities 
+  pwmm2 = (basePwm - KP_M2_Right * (error_right) + pwm_encoder_right) / 2 + 12;    //Calculating the pwm for motor 2 according to the equations of velocities
+  pwmm3 = (basePwm - KP_M3_Right * (error_right) + pwm_encoder_right) / 2 + 12;    //Calculating the pwm for motor 3 according to the equations of velocities
 
   if (pwmm1 > Maxpwm)
     pwmm1 = Maxpwm;
@@ -366,11 +368,11 @@ void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP
 
 }
 
-/*  Function Name       : M_TurnTillPressed()
-    Input               : Required angle(req_ang) for which function is to be executed and  Proportionality constants(KP_Orient, KI_Angle)
-    Output              : Bot orients as per given required angle(req_angle).
-    Logic               : Bot orients at desired or required angle from initial position, all motors are given equal pwm until it acquires desired angle.
-    Example Call        : M_TurnTillPressed(1);
+/*  Function Name       : TTP_Man()
+    Input               : Required direction ( dir )
+    Output              : Bot rotates in the respective direction untill the button is pressed.
+    Logic               : Bot rotates either clockwise or anti - clockwise according to the button pressed, all motors are given equal pwm.
+    Example Call        : TTP_Man(int dir)
 */
 void TTP_Man(int dir)
 {
@@ -425,7 +427,7 @@ void TTP_Man(int dir)
     Input               : Required angle(req_ang) for which function is to be executed and  Proportionality constants(KP_Orient, KI_Angle)
     Output              : Bot orients as per given required angle(req_angle).
     Logic               : Bot orients at desired or required angle from initial position, all motors are given equal pwm until it acquires desired angle.
-    Example Call        : M_Turn(KP_Orient, KI_Angle, 338.00);
+    Example Call        : M_Turn(KP_Orient, KI_Angle, 338.00, 1);
 */
 void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
 {
