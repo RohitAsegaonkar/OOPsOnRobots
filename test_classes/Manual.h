@@ -9,59 +9,58 @@ class Manual
 {
   private:
 
-    float Shifted_Yaw = 0;//Variable to store the resolved value of yaw from -180 to 180
+    /******************************************* Creation of Objects ******************************************************/
     Encoder _X;
     Encoder _Y;
     Mpu _V;
     Motor _M1, _M2, _M3;
+    /**********************************************************************************************************************/
 
-    float Yaw = 0;   
+    /********************************************** MPU Variables *********************************************************/
+    float Shifted_Yaw = 0;              //Variable to store the changed/shifted value of yaw as set point for next function
+    float Yaw = 0;                      //Variable to store the resolved value of yaw from -180 to 180
+    /**********************************************************************************************************************/
 
-    /************ PWM Values ************/
+    /*********************************************** PWM Values ***********************************************************/
     #define Maxpwm 200.00
     #define basePwm 150
     int pwmm1, pwmm2, pwmm3;
+    /**********************************************************************************************************************/
 
-    /*** forwardManY() Function Variables ***/
-    float error_forward;                                        //Variable to store the value of the_X-Enc encoder as error.
-
-    float error_encoder_forward;
+    /************************************* forwardManY() Function Variables ***********************************************/
+    float error_forward;                 //Variable to store the value of the_X-Enc encoder as error.
+    float error_encoder_forward;         //Variable    
     float pwm_encoder_forward;
     float error_sum_forward;
-    /****************************************/
+    /**********************************************************************************************************************/
 
-    /*** backwardManY() Function Variables ***/
+    /************************************** backwardManY() Function Variables *********************************************/
     float error_back;
-
     float error_encoder_back;
     float pwm_encoder_back;
     float error_sum_back;
-    /****************************************/
+    /**********************************************************************************************************************/
 
-    /***** leftManX() Function Variables *****/
+    /*************************************** leftManX() Function Variables ************************************************/
     float error_left;                                     //Variable to store the value of the_X-Enc encoder as error.
-
     float error_encoder_left;
     float pwm_encoder_left;
     float error_sum_left;
-    /****************************************/
+    /**********************************************************************************************************************/
 
-    /***** rightManX() Function Variables *****/
+    /****************************************** rightManX() Function Variables ********************************************/
     float error_right;
-
     float error_encoder_right;
     float pwm_encoder_right;
     float error_sum_right;
-    /****************************************/
+    /**********************************************************************************************************************/
 
-    //Variables required to keep track of future and past
-    float rate_change = 5;
-    float error_sum_ori;
-    float prev_error = 0;
-
-    //Variables used for PID
+    /***************************************** TurnMan() Function Variables ***********************************************/
     float req_angle = 0.0;
     float error_ang = 3;
+    float error_sum_ori;
+    float prev_error = 0;
+    /**********************************************************************************************************************/
 
   public:
 
@@ -430,9 +429,8 @@ void TTP_Man(int dir)
 */
 void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
 {
-  //prev_error = error_ang; 
   error_ang = 5;
-   if (!dir)
+    if (!dir)
     {
       _M1.SetDirection(0);
       _M2.SetDirection(1);
