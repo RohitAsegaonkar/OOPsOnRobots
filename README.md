@@ -99,7 +99,7 @@ Class Mpu is used to represent the inertial measurement unit MPU6050.
 
 Meaning of parameters:
 
- *s - to select the serial port.
+- s - to select the serial port.
 
 | s  | serial port |
 |--- |-------------|
