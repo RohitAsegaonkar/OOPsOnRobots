@@ -1,10 +1,10 @@
 /***** MPU *****/
-#define MPU 0
+#define MPU 1
 /***************/
 
 /********** Encoder **********/
 #define encoder_x 1
-#define encoder_y 0
+#define encoder_y 1
 /*****************************/
 
 /********** MOTORS **********/
@@ -78,20 +78,24 @@ void loop()
 {
 /*************** MPU ***************/
     #if MPU
+        //detachInterrupt(0);
         float Yaw;
         Yaw = mpu.readMpu(2);
         Serial.print(" Yaw : \t" );
-        Serial.println(Yaw);
+        Serial.print(Yaw);
+        //attachInterrupt(0,UpdateXEncoder,RISING);
     #endif 
 /***********************************/
 
 /********** Encoder **********/
     #if encoder_x
-
+        Serial.print("\t \t \tEncoder 1: \t ");
+        Serial.print(X.encodervalue);    
     #endif
 
     #if encoder_y
-
+        Serial.print("\t \t \tEncoder 2: \t ");
+        Serial.println(Y.encodervalue);  
     #endif
 
 /*****************************/
