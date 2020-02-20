@@ -58,12 +58,12 @@ float Last_Yaw;
 
 void UpdateXEncoder()
 {
-  X.updateEncoder();
+  X.updateEncoderX();
 }
 
 void UpdateYEncoder()
 {
-  Y.updateEncoder();
+  Y.updateEncoderY();
 }
 
 //Variables to accept charater from Controller
@@ -92,7 +92,8 @@ void setup()
 void loop()
 {
   #if autonomous
-  Auto.forwardAutoY(200, 0.0, 0.0, ((Maxpwm/200)), 0.00, 0.00,0.00, 0.00, 0.00);
+  //Serial.println(X.encodervalue);
+  Auto.forwardAutoY(200, 0.48, 0.48, ((Maxpwm/200) - 0.1), 0.04, 0.04,0.00, 40, 50 );
   delay(2000);
   #endif
     

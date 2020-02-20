@@ -111,8 +111,8 @@ void UpdateShiftedYaw(float Yaw_ref)
 */
 void reset()
 {
-  _Y.encodervalue = 0;
-  _X.encodervalue = 0;
+//  _Y.encodervalue = 0;
+//  _X.encodervalue = 0;
 
   Serial.print("In Reset");
   Serial.print("\tA.Yaw = ");  
@@ -141,7 +141,7 @@ void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encode
   Yaw = _V.readMpu(2);                          // Reading Mpu Values
   error_forward = Yaw - Shifted_Yaw;
 
-  error_encoder_forward = _X.encodervalue;
+ // error_encoder_forward = _X.encodervalue;
   pwm_encoder_forward = kp_encoder_forward * (error_encoder_forward);
 
   pwmm2 = basePwm + kp_strm2_forward * (error_forward) - pwm_encoder_forward ;
@@ -169,24 +169,24 @@ void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encode
   /********************************************* SERIAL PRINTING DATA ***************************************************/
 
 
-  Serial.print("\tYaw: ");
-  Serial.print(Yaw);
-  Serial.print("\tShifted Yaw: ");
-  Serial.print(Shifted_Yaw);
-  Serial.print("\tError: ");
-  Serial.print(error_forward);
-  Serial.print("\tError encoder: ");
-  Serial.print(error_encoder_forward);
-  Serial.print("\tencodervalue1 :      ");
-  Serial.print(_Y.encodervalue);
-  Serial.print("\tkp_strm2_forward :      ");
-  Serial.print(kp_strm2_forward);
-  Serial.print("\tPWM:  ");
-  Serial.print(pwmm1);
-  Serial.print("   ");
-  Serial.print(pwmm2);
-  Serial.print("   ");
-  Serial.println(pwmm3);
+//  Serial.print("\tYaw: ");
+//  Serial.print(Yaw);
+//  Serial.print("\tShifted Yaw: ");
+//  Serial.print(Shifted_Yaw);
+//  Serial.print("\tError: ");
+//  Serial.print(error_forward);
+//  Serial.print("\tError encoder: ");
+//  Serial.print(error_encoder_forward);
+//  Serial.print("\tencodervalue1 :      ");
+//  Serial.print(_Y.encodervalue);
+//  Serial.print("\tkp_strm2_forward :      ");
+//  Serial.print(kp_strm2_forward);
+//  Serial.print("\tPWM:  ");
+//  Serial.print(pwmm1);
+//  Serial.print("   ");
+//  Serial.print(pwmm2);
+//  Serial.print("   ");
+//  Serial.println(pwmm3);
 
 }
 
@@ -204,7 +204,7 @@ void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backw
   Yaw = _V.readMpu(2);                         // Reading Mpu Values
   error_back = Yaw - Shifted_Yaw;
 
-  error_encoder_back = _X.encodervalue;
+ // error_encoder_back = _X.encodervalue;
   pwm_encoder_back = KP_Enc_Backward * (error_encoder_back);
 
   pwmm2 = basePwm - KP_M2_Backward * (error_back) - pwm_encoder_back;
@@ -226,24 +226,24 @@ void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backw
 
   /********************************************* SERIAL PRINTING DATA ***************************************************/
 
-  Serial.print("\tYaw: ");
-  Serial.print(Yaw);
-  Serial.print("\tShifted Yaw: ");
-  Serial.print(Shifted_Yaw);
-  Serial.print("\tError: ");
-  Serial.print(error_forward);
-  Serial.print("\tError encoder: ");
-  Serial.print(error_encoder_forward);
-  Serial.print("\tencodervalue1 :      ");
-  Serial.print(_Y.encodervalue);
-  // Serial.print("\tkp_strm2_forward :      ");
-  // Serial.print(kp_strm2_forward);
-  Serial.print("\tPWM:  ");
-  Serial.print(pwmm1);
-  Serial.print("   ");
-  Serial.print(pwmm2);
-  Serial.print("   ");
-  Serial.println(pwmm3);
+//  Serial.print("\tYaw: ");
+//  Serial.print(Yaw);
+//  Serial.print("\tShifted Yaw: ");
+//  Serial.print(Shifted_Yaw);
+//  Serial.print("\tError: ");
+//  Serial.print(error_forward);
+//  Serial.print("\tError encoder: ");
+//  Serial.print(error_encoder_forward);
+//  Serial.print("\tencodervalue1 :      ");
+//  Serial.print(_Y.encodervalue);
+//  // Serial.print("\tkp_strm2_forward :      ");
+//  // Serial.print(kp_strm2_forward);
+//  Serial.print("\tPWM:  ");
+//  Serial.print(pwmm1);
+//  Serial.print("   ");
+//  Serial.print(pwmm2);
+//  Serial.print("   ");
+//  Serial.println(pwmm3);
 
 }
 
@@ -261,7 +261,7 @@ void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc
   Yaw = _V.readMpu(2);
   error_left = Yaw - Shifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function                       //Calculating the basepwm in proportion with the error
 
-  error_encoder_left = _Y.encodervalue;                                           //Error for locomotion in X direction is given by the y encoder
+  //error_encoder_left = _Y.encodervalue;                                           //Error for locomotion in X direction is given by the y encoder
   pwm_encoder_left = KP_Enc_Left * (error_encoder_left);                          //Calculating the pwm error
 
   pwmm1 = basePwm - KP_M1_Left * (error_left) - pwm_encoder_left;                 //Calculating the pwm for motor 1 according to the equations of velocities
@@ -287,24 +287,24 @@ void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc
 
   /********************************************* SERIAL PRINTING DATA ***************************************************/
 
-  Serial.print("\tYaw: ");
-  Serial.print(Yaw);
-  Serial.print("\tShifted Yaw: ");
-  Serial.print(Shifted_Yaw);
-  Serial.print("\tError: ");
-  Serial.print(error_left);
-  Serial.print("\tError encoder: ");
-  Serial.print(error_encoder_left);
-  Serial.print("\tencodervalue1 :      ");
-  Serial.print(_X.encodervalue);
-  // Serial.print("\tkp_strm2_forward :      ");
-  // Serial.print(kp_strm2_forward);
-  Serial.print("\tPWM:  ");
-  Serial.print(pwmm1);
-  Serial.print("   ");
-  Serial.print(pwmm2);
-  Serial.print("   ");
-  Serial.println(pwmm3);
+//  Serial.print("\tYaw: ");
+//  Serial.print(Yaw);
+//  Serial.print("\tShifted Yaw: ");
+//  Serial.print(Shifted_Yaw);
+//  Serial.print("\tError: ");
+//  Serial.print(error_left);
+//  Serial.print("\tError encoder: ");
+//  Serial.print(error_encoder_left);
+//  Serial.print("\tencodervalue1 :      ");
+//  /Serial.print(_X.encodervalue);
+//  // Serial.print("\tkp_strm2_forward :      ");
+//  // Serial.print(kp_strm2_forward);
+//  Serial.print("\tPWM:  ");
+//  Serial.print(pwmm1);
+//  Serial.print("   ");
+//  Serial.print(pwmm2);
+//  Serial.print("   ");
+//  Serial.println(pwmm3);
 
 
 }
@@ -321,7 +321,7 @@ void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP
 {
   Yaw = _V.readMpu(2);
 
-  error_encoder_right = _Y.encodervalue;
+  //error_encoder_right = _Y.encodervalue;
   pwm_encoder_right = KP_Enc_Right * (error_encoder_right);
 
   pwmm1 = basePwm + KP_M1_Right * (error_right) - pwm_encoder_right;
@@ -355,7 +355,7 @@ void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP
   Serial.print("\tError encoder: ");
   Serial.print(error_encoder_right);
   Serial.print("\tencodervalue1 :      ");
-  Serial.print(_X.encodervalue);
+  //Serial.print(_X.encodervalue);
   // Serial.print("\tkp_strm2_forward :      ");
   // Serial.print(kp_strm2_right);
   Serial.print("\tPWM:  ");

@@ -3,14 +3,16 @@
 
 class Encoder
 {
-
     private:
-    volatile int a, b;
+    volatile int a, b, c, d;
     int encoderPin , comparePin; 
-
-    public:
     /******* Variables for the encoder *******/
-    volatile int encodervalue;                                                // Count of pulses from encoder 1 and encoder 2
+                                            // Count of pulses from encoder 1 and encoder 2
+    
+    public:
+    static int EncoderValueX;
+    static int EncoderValueY;
+    volatile int encodervalue = 0;         
     Encoder()
     {
 
@@ -31,7 +33,7 @@ class Encoder
  *                        If the channel B is in phase with the channel A the count is incremented and decremented otherwise
  *  Example Call        : The function is called by the interrupt
  */
-    void updateEncoder()
+    void updateEncoderX()
     {
         a = digitalRead(encoderPin);
         b = digitalRead(comparePin);
@@ -39,8 +41,22 @@ class Encoder
             encodervalue++;
         if (b == 0)
             encodervalue--;
+        EncoderValueX = encodervalue;
+//        getEncoderValue(encodervalue);
+//       Serial.println(EncoderValue);
+    }      
 
-        //Serial.println(encodervalue);
+     void updateEncoderY()
+    {
+        c = digitalRead(encoderPin);
+        d = digitalRead(comparePin);
+        if (d == 1)
+            encodervalue++;
+        if (d == 0)
+            encodervalue--;
+        EncoderValueY = encodervalue;
+//        getEncoderValue(encodervalue);
+//       Serial.println(EncoderValue);
     }      
 
     void info(){
@@ -53,10 +69,26 @@ class Encoder
       Serial.print(encodervalue);
     }
 
-    volatile int getEncoderValue()
-    {
-        return encodervalue;
+     int getEncoderValueX()
+    {  
+ 
+//        Serial.print("encodervalue\t");
+//        Serial.println(EncoderValue);
+        return EncoderValueX;
+    }
+
+       int getEncoderValueY()
+    {  
+ 
+//        Serial.print("encodervalue\t");
+//        Serial.println(EncoderValue);
+        return EncoderValueY;
     }
 
 };
+
+
+static int Encoder::EncoderValueX = 0;
+static int Encoder::EncoderValueY = 0;
+
 #endif

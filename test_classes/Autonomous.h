@@ -24,7 +24,7 @@ class Autonomous
     /**********************************************************************************************************************/
 
     /*********************************************** PWM Values ***********************************************************/
-    #define Maxpwm 200.00                   //Maximum pwm as constraint in the entire code
+    #define Maxpwm 150.00                   //Maximum pwm as constraint in the entire code
     int a_basePwm;
     int a_pwmm1, a_pwmm2, a_pwmm3;
     /**********************************************************************************************************************/
@@ -106,14 +106,14 @@ class Autonomous
       //Assigning the MPU object
       _AutoMpu = v;
 
-      _AutoY.info();
+      //_AutoY.info();
     }    
 
 
 void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, float a_kp_strm3_forward, float a_kp_dist_forward, float a_kp2_encoder_forward,  float a_kp3_encoder_forward, float a_ki_dist_forward, float a_kd2_dist_forward, float a_kd3_dist_forward)
 {
-  _AutoX.encodervalue = 0;                                                                          //Shifting the origin by initializing both the encoder values to zero
-  _AutoY.encodervalue = 0;
+  //_AutoX.encodervalue = 0;                                                                          //Shifting the origin by initializing both the encoder values to zero
+  //_AutoY.encodervalue = 0;
   a_prev_error_forward = a_requiredDistance_forward;
 
   while (a_distanceCovered_forward < a_requiredDistance_forward)                              //Execute the function till required distance is not reached
@@ -121,8 +121,8 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
     AutoYaw = _AutoMpu.readMpu(2);
     a_error_forward = AutoYaw - AutoShifted_Yaw;                                                      //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function
 
-    a_current_forward = abs(_AutoY.getEncoderValue());                                                   //Storing the value of the y encoder
-    //Serial.println(a_current_forward);
+    a_current_forward = abs(_AutoY.getEncoderValueY());                                                   //Storing the value of the y encoder
+
     a_distanceCovered_forward = a_current_forward * 0.05236;                                  //Multiplying the value of the encoder by the circumference of the dummy wheel
 
     a_errorDist_forward = a_requiredDistance_forward - a_distanceCovered_forward;             //Calculating the error in distance
@@ -130,7 +130,7 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
 
     a_basePwm = abs(a_errorDist_forward) * a_kp_dist_forward;                                 //Calculating the basepwm in proportion with the error
 
-    a_error_encoder_forward = _AutoX.encodervalue;                                                  //Error for locomotion in y direction is given by the x encoder
+    a_error_encoder_forward = _AutoX.getEncoderValueX();                                                  //Error for locomotion in y direction is given by the x encoder
 
     a_pwm_encoder_forward2 = a_kp2_encoder_forward * (a_error_encoder_forward);               //Calculating the pwm error due to Lateral Shift
     a_pwm_encoder_forward3 = a_kp3_encoder_forward * (a_error_encoder_forward);               //Calculating the pwm error due to Lateral Shift
@@ -140,15 +140,18 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
     a_pwmm2 = a_basePwm  + a_kp_strm2_forward * (a_error_forward) + a_pwm_encoder_forward2 ;    //Calculating the pwm for motor 2 according to the equations of velocities
     a_pwmm3 = a_basePwm  - a_kp_strm3_forward * (a_error_forward) - a_pwm_encoder_forward3 ;    //Calculating the pwm for motor 3 according to the equations of velocities
 
-    if (a_errorDist_forward < ((a_requiredDistance_forward / 10.00) + 10))                    //Increasing the value of kp for angular deviation for motor 2, 10 cm before applying D so that it corrects itself
-    {
-      a_kp_strm2_forward += 0.005;
-    }
+//    if (a_errorDist_forward < ((a_requiredDistance_forward / 10.00) + 10))                    //Increasing the value of kp for angular deviation for motor 2, 10 cm before applying D so that it corrects itself
+//    {
+//      a_kp_strm2_forward += 0.005;
+//    }
 
-    if (a_errorDist_forward < (a_requiredDistance_forward / 10.00))                          //If Error is less than One Ninth of the Total Distance than apply D
+    if (a_errorDist_forward < (a_requiredDistance_forward / 5.00))                          //If Error is less than One Ninth of the Total Distance than apply D
     {
       a_pwmm2 -= (a_kd2_dist_forward * a_rateChange_forward);
       a_pwmm3 -= (a_kd3_dist_forward * a_rateChange_forward);
+      a_kp_strm3_forward += 0.1;
+      a_kp_strm2_forward += 0.1;
+      
     }
 
     if (a_pwmm2 < 0 )                                                                          //If PWM of any wheel becomes negative make it zero
@@ -181,8 +184,10 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
 //    Serial.print(a_error_forward);
 //    Serial.print("\tError encoder: ");
 //    Serial.print(a_error_encoder_forward);
-//    Serial.print("\tencodervalue2 :      ");
-//    Serial.print(_AutoX.encodervalue);
+//    Serial.print(" encodervalueX :      ");
+//    Serial.print(_AutoX.getEncoderValueX());
+//      Serial.print(" \tencodervalueY:      ");
+//    Serial.print(_AutoX.getEncoderValueY());
 //    Serial.print("\tdistance covered :      ");
 //    Serial.print(a_distanceCovered_forward);
 //    Serial.print("\tPWM:  ");
