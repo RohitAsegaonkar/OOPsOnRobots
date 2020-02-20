@@ -94,15 +94,15 @@ class Autonomous
 
     public :
 
-    Autonomous(Motor m1, Motor m2, Motor m3, Mpu v, Encoder x, Encoder y)
+    Autonomous(Motor m1, Motor m2, Motor m3, Mpu v, Encoder *x, Encoder *y)
     {
       //Assigning the Motor Object
       _AutoM1 = m1;
       _AutoM2 = m2;
       _AutoM3 = m3;
       //Assigning the Encoder Object
-      _AutoX = x;
-      _AutoY = y;
+      _AutoX = *(x);
+      _AutoY = *(y);
       //Assigning the MPU object
       _AutoMpu = v;
 
@@ -121,7 +121,7 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
     AutoYaw = _AutoMpu.readMpu(2);
     a_error_forward = AutoYaw - AutoShifted_Yaw;                                                      //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function
 
-    a_current_forward = abs(_AutoY.getEncoderValueY());                                                   //Storing the value of the y encoder
+    a_current_forward = abs(_AutoY.getEncoderValue());                                                   //Storing the value of the y encoder
 
     a_distanceCovered_forward = a_current_forward * 0.05236;                                  //Multiplying the value of the encoder by the circumference of the dummy wheel
 
@@ -130,7 +130,7 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
 
     a_basePwm = abs(a_errorDist_forward) * a_kp_dist_forward;                                 //Calculating the basepwm in proportion with the error
 
-    a_error_encoder_forward = _AutoX.getEncoderValueX();                                                  //Error for locomotion in y direction is given by the x encoder
+    a_error_encoder_forward = _AutoX.getEncoderValue();                                                  //Error for locomotion in y direction is given by the x encoder
 
     a_pwm_encoder_forward2 = a_kp2_encoder_forward * (a_error_encoder_forward);               //Calculating the pwm error due to Lateral Shift
     a_pwm_encoder_forward3 = a_kp3_encoder_forward * (a_error_encoder_forward);               //Calculating the pwm error due to Lateral Shift
@@ -184,10 +184,10 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
 //    Serial.print(a_error_forward);
 //    Serial.print("\tError encoder: ");
 //    Serial.print(a_error_encoder_forward);
-//    Serial.print(" encodervalueX :      ");
-//    Serial.print(_AutoX.getEncoderValueX());
+   Serial.print(" encodervalueX :      ");
+   Serial.println(_AutoX.getEncoderValue());
 //      Serial.print(" \tencodervalueY:      ");
-//    Serial.print(_AutoX.getEncoderValueY());
+//    Serial.print(_AutoX.getEncoderValue());
 //    Serial.print("\tdistance covered :      ");
 //    Serial.print(a_distanceCovered_forward);
 //    Serial.print("\tPWM:  ");
@@ -221,7 +221,7 @@ void backwardAutoY(float a_requiredDistance_back, float a_kp_strm2_back, float a
   {
     AutoYaw = _AutoMpu.readMpu(2);
     a_error_back = AutoYaw - AutoShifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function
-    a_current_back = abs(_AutoY.getEncoderValueY());                                                        //Storing the value of the y encoder
+    a_current_back = abs(_AutoY.getEncoderValue());                                                        //Storing the value of the y encoder
 
     a_distanceCovered_back = a_current_back * 0.05236;                                          //Multiplying the value of the encoder by the circumference of the dummy wheel
 
@@ -231,7 +231,7 @@ void backwardAutoY(float a_requiredDistance_back, float a_kp_strm2_back, float a
 
     a_basePwm = abs(a_errorDist_back) * a_kp_dist_back;                                         //Calculating the basepwm in proportion with the error
 
-    a_error_encoder_back =  _AutoX.getEncoderValueX();                                                      //Error for locomotion in y direction is given by the x encoder
+    a_error_encoder_back =  _AutoX.getEncoderValue();                                                      //Error for locomotion in y direction is given by the x encoder
     a_pwm_encoder_back = a_kp_encoder_back * (a_error_encoder_back);                            //Calculating the pwm error
 
     a_pwmm2 = a_basePwm - a_kp_strm2_back * (a_error_back) - a_pwm_encoder_back + a_ki_dist_back * (a_error_sum_back);     //Calculating the pwm for motor 2 according to the equations of velocities
@@ -259,7 +259,7 @@ void backwardAutoY(float a_requiredDistance_back, float a_kp_strm2_back, float a
       Serial.print("\tError encoder: ");
       Serial.print(a_error_encoder_back);
       Serial.print("\tencodervaluex :      ");
-      Serial.print(_AutoX.getEncoderValueX());
+      Serial.print(_AutoX.getEncoderValue());
       Serial.print("\tdistance covered :      ");
       Serial.print(a_distanceCovered_back);
       Serial.print("\tPWM:  ");
@@ -294,13 +294,13 @@ void rightAutoX(float a_requiredDistance_right, float a_kp_strm1_right, float a_
   { 
     AutoYaw = _AutoMpu.readMpu(2);
     a_error_right = AutoYaw - AutoShifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function
-    a_current_right = abs(_AutoX.getEncoderValueX());                                                        //Storing the value of the y encoder
+    a_current_right = abs(_AutoX.getEncoderValue());                                                        //Storing the value of the y encoder
     a_distanceCovered_right = a_current_right * 0.0555;                                      //Multiplying the value of the encoder by the circumference of the dummy wheel
     a_errorDist_right = a_requiredDistance_right - a_distanceCovered_right;                   //Calculating the error in distance
     a_error_sum_right = a_errorDist_right + a_error_sum_right;                                //Calculating the sum of the errors
     a_basePwm = abs(a_errorDist_right) * a_kp_dist_right;                                       //Calculating the basepwm in proportion with the error
 
-    a_error_encoder_right = _AutoY.getEncoderValueY();                                                    //Error for locomotion in X direction is given by the y encoder
+    a_error_encoder_right = _AutoY.getEncoderValue();                                                    //Error for locomotion in X direction is given by the y encoder
     a_pwm_encoder_right = a_kp_encoder_right * (a_error_encoder_right);                         //Calculating the pwm error
 
     a_pwmm1 =  a_basePwm + a_kp_strm1_right * (a_error_right) + a_pwm_encoder_right - 10 ;          //Calculating the pwm for motor 1 according to the equations of velocities
@@ -364,7 +364,7 @@ void rightAutoX(float a_requiredDistance_right, float a_kp_strm1_right, float a_
       Serial.print("\tError encoder: ");
       Serial.print(a_error_encoder_right);
       Serial.print("\tencodervalueX:      ");
-      Serial.print(_AutoX.getEncoderValueX());
+      Serial.print(_AutoX.getEncoderValue());
       Serial.print("\tdistance covered :      ");
       Serial.print(a_distanceCovered_right);
       Serial.print("\tPWM:  ");
@@ -402,7 +402,7 @@ void leftAutoX(float a_requiredDistance_left, float a_kpstrm1_left, float a_kpst
   {           
     AutoYaw = _AutoMpu.readMpu(2);
     a_error_left = AutoYaw - AutoShifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function
-    a_current_left = abs(_AutoX.getEncoderValueX());                                                        //Storing the value of the y encoder
+    a_current_left = abs(_AutoX.getEncoderValue());                                                        //Storing the value of the y encoder
 
     a_distanceCovered_left = a_current_left * 0.05236;                                        //Multiplying the value of the encoder by the circumference of the dummy wheel
     
@@ -411,7 +411,7 @@ void leftAutoX(float a_requiredDistance_left, float a_kpstrm1_left, float a_kpst
     
     a_basePwm = abs(a_errorDist_left) * a_kpdist_left;                                        //Calculating the basepwm in proportion with the error
 
-    a_error_encoder_left = _AutoY.getEncoderValueY();;                                                     //Error for locomotion in X direction is given by the y encoder
+    a_error_encoder_left = _AutoY.getEncoderValue();;                                                     //Error for locomotion in X direction is given by the y encoder
     a_pwm_encoder_left1 = a_kp1encoder_left * (a_error_encoder_left);                         //Calculating the pwm error
     a_pwm_encoder_left2 = a_kp2encoder_left * (a_error_encoder_left);                         //Calculating the pwm error
     a_pwm_encoder_left3 = a_kp3encoder_left * (a_error_encoder_left);           
@@ -480,7 +480,7 @@ void leftAutoX(float a_requiredDistance_left, float a_kpstrm1_left, float a_kpst
       Serial.print("\tError encoder: ");
       Serial.print(a_error_encoder_left);
       Serial.print("\tencodervaluey :      ");
-      Serial.print(_AutoY.getEncoderValueY()a_);
+      Serial.print(_AutoY.getEncoderValue()a_);
       Serial.print("\tdistance covered :      ");
       Serial.print(a_distanceCovered_left);
       Serial.print("\tPWM:  ");
