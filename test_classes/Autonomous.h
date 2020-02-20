@@ -283,7 +283,6 @@ void backwardAutoY(float a_requiredDistance_back, float a_kp_strm2_back, float a
 
 }
 
-
 void rightAutoX(float a_requiredDistance_right, float a_kp_strm1_right, float a_kp_strm2_right, float a_kp_strm3_right, float a_kp_dist_right, float a_kp_encoder_right, float a_ki_dist_right, float a_kd1_dist_right, float a_kd2_dist_right, float a_kd3_dist_right)
 {
   
@@ -296,7 +295,6 @@ void rightAutoX(float a_requiredDistance_right, float a_kp_strm1_right, float a_
     AutoYaw = _AutoMpu.readMpu(2);
     a_error_right = AutoYaw - AutoShifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function
     a_current_right = abs(_AutoX.getEncoderValueX());                                                        //Storing the value of the y encoder
-
     a_distanceCovered_right = a_current_right * 0.0555;                                      //Multiplying the value of the encoder by the circumference of the dummy wheel
     a_errorDist_right = a_requiredDistance_right - a_distanceCovered_right;                   //Calculating the error in distance
     a_error_sum_right = a_errorDist_right + a_error_sum_right;                                //Calculating the sum of the errors
@@ -391,7 +389,123 @@ void rightAutoX(float a_requiredDistance_right, float a_kp_strm1_right, float a_
   a_distanceCovered_right = 0;                                                                //Flushing the value of the variable
 
 }
-void leftAutoX();   
+
+void leftAutoX(float a_requiredDistance_left, float a_kpstrm1_left, float a_kpstrm2_left, float a_kpstrm3_left, float a_kpdist_left, float a_kp1encoder_left, float a_kp2encoder_left, float a_kp3encoder_left, float a_kidist_left , float a_kd1_dist_left, float a_kd2_dist_left, float a_kd3_dist_left)
+{
+  
+  // encodervalue1 = 0;                                                                          //Shifting the origin by initializing both the encoder values to zero
+  // encodervalue2 = 0;            
+  
+  a_prev_error_left = a_requiredDistance_left;            
+  
+  while (a_distanceCovered_left < a_requiredDistance_left)                                    //Execute the function till required distance is not reached
+  {           
+    AutoYaw = _AutoMpu.readMpu(2);
+    a_error_left = AutoYaw - AutoShifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function
+    a_current_left = abs(_AutoX.getEncoderValueX());                                                        //Storing the value of the y encoder
+
+    a_distanceCovered_left = a_current_left * 0.05236;                                        //Multiplying the value of the encoder by the circumference of the dummy wheel
+    
+    a_errorDist_left = a_requiredDistance_left - a_distanceCovered_left;                      //Calculating the error in distance
+    a_error_sum_left = a_errorDist_left + a_error_sum_left;                                   //Calculating the sum of the errors
+    
+    a_basePwm = abs(a_errorDist_left) * a_kpdist_left;                                        //Calculating the basepwm in proportion with the error
+
+    a_error_encoder_left = _AutoY.getEncoderValueY();;                                                     //Error for locomotion in X direction is given by the y encoder
+    a_pwm_encoder_left1 = a_kp1encoder_left * (a_error_encoder_left);                         //Calculating the pwm error
+    a_pwm_encoder_left2 = a_kp2encoder_left * (a_error_encoder_left);                         //Calculating the pwm error
+    a_pwm_encoder_left3 = a_kp3encoder_left * (a_error_encoder_left);           
+
+    a_rateChange_left = a_prev_error_left - a_errorDist_left;           
+
+    a_pwmm1 = (a_basePwm  - a_kpstrm1_left * (a_error_left) + a_pwm_encoder_left1) - 20;        //Calculating the pwm for motor 1 according to the equations of velocities   offset for 400: -20
+    a_pwmm2 = (a_basePwm  + a_kpstrm2_left * (a_error_left) - a_pwm_encoder_left2) / 2 + 15;    //Calculating the pwm for motor 2 according to the equations of velocities   offset for 400: +20
+    a_pwmm3 = (a_basePwm  + a_kpstrm3_left * (a_error_left) - a_pwm_encoder_left3) / 2 ;        //Calculating the pwm for motor 3 according to the equations of velocities   
+
+    //Implementing ki if error is less than 20
+      if (a_errorDist_left < (a_requiredDistance_left/2.22))                                  
+      {
+        a_pwmm1 = a_pwmm1 + a_kidist_left * (a_error_sum_left) + 30;                                     //offset for 400: +30      
+        a_pwmm2 = a_pwmm2 + (a_kidist_left * (a_error_sum_left)) / 2 - 10;                               //offset for 400: -10      
+        a_pwmm3 = a_pwmm3 + (a_kidist_left * (a_error_sum_left)) / 2;
+      }
+
+    //If Error is less than One Ninth of the Total Distance than apply D
+      if (a_errorDist_left < (a_requiredDistance_left / 10.00))
+      {
+        a_pwmm1 -= (a_kd1_dist_left * a_rateChange_left);
+        a_pwmm2 -= (a_kd2_dist_left * a_rateChange_left);
+        a_pwmm3 -= (a_kd3_dist_left * a_rateChange_left);
+        
+      }
+
+    //If PWM of any of the wheel is less than zero then make it zero
+      if(a_pwmm1 < 0 )
+      {
+        a_pwmm1 = 0;
+      }
+      if(a_pwmm2 < 0 )
+      {
+        a_pwmm2 = 0;
+      }
+      if(a_pwmm3 < 0 )
+      {
+        a_pwmm3 = 0;
+      }        
+
+    if (a_pwmm1 > Maxpwm)                                                                           //The pwm should not exceed the desired maximum pwm
+      a_pwmm1 = Maxpwm;              
+              
+    if (a_pwmm2 > Maxpwm / 2)              
+      a_pwmm2 = Maxpwm / 2;              
+              
+    if (a_pwmm3 > Maxpwm / 2)              
+      a_pwmm3 = Maxpwm / 2;              
+                         
+     _AutoM1.SetDirection(1);
+     _AutoM2.SetDirection(1);
+     _AutoM3.SetDirection(0);
+   
+      _AutoM1.SetSpeed(abs(a_pwmm1));
+      _AutoM2.SetSpeed(abs(a_pwmm2));
+      _AutoM3.SetSpeed(abs(a_pwmm3));
+
+    /********************************************* SERIAL PRINTING DATA ***************************************************/
+    /*
+
+      Serial.print("\tYaw: ");
+      Serial.print(AutoYaw);
+      Serial.print("\tError: ");
+      Serial.print(a_error_left);
+      Serial.print("\tError encoder: ");
+      Serial.print(a_error_encoder_left);
+      Serial.print("\tencodervaluey :      ");
+      Serial.print(_AutoY.getEncoderValueY()a_);
+      Serial.print("\tdistance covered :      ");
+      Serial.print(a_distanceCovered_left);
+      Serial.print("\tPWM:  ");
+      Serial.print(a_pwmm1);
+      Serial.print("   ");
+      Serial.print(a_pwmm2);
+      Serial.print("   ");
+      Serial.println(a_pwmm3);
+      Serial.print("\tBasepwm: ");
+      Serial.print(a_basePwm);
+      */
+      a_prev_error_left = a_errorDist_left;
+    
+  }
+  if (a_distanceCovered_left >= a_requiredDistance_left)                                            // Stoping the bot after the required distance is reached
+  {
+     _AutoM1.SetSpeed(0);
+     _AutoM2.SetSpeed(0);
+     _AutoM3.SetSpeed(0);
+    delay(100);
+  }
+  //Setting the reference value for the next function that is called
+  a_distanceCovered_left = 0;                                                                       //Flushing the value of the variable
+
+}
 
 };
 
