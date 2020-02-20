@@ -10,8 +10,6 @@ class Encoder
                                             // Count of pulses from encoder 1 and encoder 2
     
     public:
-    static int EncoderValueX;
-    static int EncoderValueY;
     volatile int encodervalue = 0;         
     Encoder()
     {
@@ -41,7 +39,7 @@ class Encoder
             encodervalue++;
         if (b == 0)
             encodervalue--;
-        EncoderValueX = encodervalue;
+//        EncoderValueX = encodervalue;
 //        getEncoderValue(encodervalue);
 //       Serial.println(EncoderValue);
     }      
@@ -54,7 +52,7 @@ class Encoder
             encodervalue++;
         if (d == 0)
             encodervalue--;
-        EncoderValueY = encodervalue;
+//        EncoderValueY = encodervalue;
 //        getEncoderValue(encodervalue);
 //       Serial.println(EncoderValue);
     }      
@@ -69,26 +67,18 @@ class Encoder
       Serial.print(encodervalue);
     }
 
-     int getEncoderValueX()
+     volatile int getEncoderValue()
     {  
  
 //        Serial.print("encodervalue\t");
 //        Serial.println(EncoderValue);
-        return EncoderValueX;
-    }
-
-       int getEncoderValueY()
-    {  
- 
-//        Serial.print("encodervalue\t");
-//        Serial.println(EncoderValue);
-        return EncoderValueY;
+        return encodervalue;
     }
 
 };
 
 
-static int Encoder::EncoderValueX = 0;
-static int Encoder::EncoderValueY = 0;
+// static int Encoder::EncoderValueX = 0;
+// static int Encoder::EncoderValueY = 0;
 
 #endif
