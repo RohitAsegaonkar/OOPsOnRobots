@@ -94,7 +94,8 @@ void loop()
 #if autonomous
   //Serial.println(X.encodervalue);
   //Auto.forwardAutoY(200, 0.48, 0.48, ((Maxpwm/200)), 0.33, 0.33,0.00, 50, 40);
-  Auto.backwardAutoY(200, 0.25, 0.25, (Maxpwm / 200), 0.0625, 0.0000);
+  //Auto.backwardAutoY(200, 0.25, 0.25, (Maxpwm / 200), 0.0625, 0.0000);
+  Auto.rightAutoX(200,0.45,0.45,0.45,(Maxpwm / 200), 0.05, 0.003,0,10,10);
   delay(20000);
 #endif
 
