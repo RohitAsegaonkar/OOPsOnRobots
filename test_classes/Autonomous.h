@@ -471,7 +471,7 @@ void leftAutoX(float a_requiredDistance_left, float a_kpstrm1_left, float a_kpst
       _AutoM3.SetSpeed(abs(a_pwmm3));
 
     /********************************************* SERIAL PRINTING DATA ***************************************************/
-    /*
+   
 
       Serial.print("\tYaw: ");
       Serial.print(AutoYaw);
@@ -480,7 +480,7 @@ void leftAutoX(float a_requiredDistance_left, float a_kpstrm1_left, float a_kpst
       Serial.print("\tError encoder: ");
       Serial.print(a_error_encoder_left);
       Serial.print("\tencodervaluey :      ");
-      Serial.print(_AutoY.getEncoderValueY()a_);
+      Serial.print(_AutoY.getEncoderValueY());
       Serial.print("\tdistance covered :      ");
       Serial.print(a_distanceCovered_left);
       Serial.print("\tPWM:  ");
@@ -491,7 +491,7 @@ void leftAutoX(float a_requiredDistance_left, float a_kpstrm1_left, float a_kpst
       Serial.println(a_pwmm3);
       Serial.print("\tBasepwm: ");
       Serial.print(a_basePwm);
-      */
+      
       a_prev_error_left = a_errorDist_left;
     
   }
