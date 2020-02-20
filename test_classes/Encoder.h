@@ -53,5 +53,10 @@ class Encoder
       Serial.print(encodervalue);
     }
 
+    volatile int getEncoderValue()
+    {
+        return encodervalue;
+    }
+
 };
 #endif

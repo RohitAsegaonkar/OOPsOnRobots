@@ -30,14 +30,14 @@ class Autonomous
     /**********************************************************************************************************************/
 
     /************************************* forwardManY() Function Variables ***********************************************/
-    float a_error_forward;                                //Variable to store the value of the MPU as error
-    float a_error_encoder_forward;                        //Lateral shift error in forward direction
-    float a_pwm_encoder_forward2, a_pwm_encoder_forward3; //PWM due to lateral shift in forward direction
+    float a_error_forward = 0;                                //Variable to store the value of the MPU as error
+    float a_error_encoder_forward = 0;                        //Lateral shift error in forward direction
+    float a_pwm_encoder_forward2 = 0, a_pwm_encoder_forward3 = 0; //PWM due to lateral shift in forward direction
     float a_error_sum_forward = 0;                        //Adding previous errors for implementing Ki                                                                           
-    float a_current_forward, a_errorDist_forward;         //Current values of encoder and distance error in forward direction.                                                
-    float a_prev_error_forward;
-    float a_distanceCovered_forward;       //Distance Covered in forward
-    float a_requiredDistance_forward;      //Desired distance in forward 
+    float a_current_forward = 0, a_errorDist_forward = 0;         //Current values of encoder and distance error in forward direction.                                                
+    float a_prev_error_forward = 0;
+    float a_distanceCovered_forward = 0;       //Distance Covered in forward
+    float a_requiredDistance_forward = 0;      //Desired distance in forward 
     float a_rateChange_forward = 0;
     /*** A_Forward() Function Variables ***/
 
@@ -115,12 +115,13 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
   _AutoX.encodervalue = 0;                                                                          //Shifting the origin by initializing both the encoder values to zero
   _AutoY.encodervalue = 0;
   a_prev_error_forward = a_requiredDistance_forward;
+
   while (a_distanceCovered_forward < a_requiredDistance_forward)                              //Execute the function till required distance is not reached
   {    
     AutoYaw = _AutoMpu.readMpu(2);
     a_error_forward = AutoYaw - AutoShifted_Yaw;                                                      //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function
 
-    a_current_forward = abs( _AutoY.encodervalue);                                                   //Storing the value of the y encoder
+    a_current_forward = abs(_AutoY.getEncoderValue());                                                   //Storing the value of the y encoder
     //Serial.println(a_current_forward);
     a_distanceCovered_forward = a_current_forward * 0.05236;                                  //Multiplying the value of the encoder by the circumference of the dummy wheel
 
@@ -181,7 +182,7 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
 //    Serial.print("\tError encoder: ");
 //    Serial.print(a_error_encoder_forward);
 //    Serial.print("\tencodervalue2 :      ");
-     // Serial.print(_AutoX.encodervalue);
+//    Serial.print(_AutoX.encodervalue);
 //    Serial.print("\tdistance covered :      ");
 //    Serial.print(a_distanceCovered_forward);
 //    Serial.print("\tPWM:  ");
