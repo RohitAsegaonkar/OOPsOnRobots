@@ -42,9 +42,15 @@ class Encoder
         if (b == 0)
             encodervalue--;
         EncoderValueX = encodervalue;
-//        getEncoderValue(encodervalue);
-//       Serial.println(EncoderValue);
-    }      
+    }   
+
+    void updateEncoderX(int m)
+    {
+        encodervalue = m;
+        EncoderValueX = encodervalue;
+    }         
+
+
 
      void updateEncoderY()
     {
@@ -55,9 +61,14 @@ class Encoder
         if (d == 0)
             encodervalue--;
         EncoderValueY = encodervalue;
-//        getEncoderValue(encodervalue);
-//       Serial.println(EncoderValue);
     }      
+
+    void updateEncoderY(int m)
+    {
+        encodervalue = m;
+        EncoderValueY = encodervalue;
+    }      
+
 
     void info(){
       Serial.print("a:");
@@ -71,7 +82,7 @@ class Encoder
 
      int getEncoderValueX()
     {  
- 
+
 //        Serial.print("encodervalue\t");
 //        Serial.println(EncoderValue);
         return EncoderValueX;

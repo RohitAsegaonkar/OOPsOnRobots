@@ -112,8 +112,8 @@ class Autonomous
 
 void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, float a_kp_strm3_forward, float a_kp_dist_forward, float a_kp2_encoder_forward,  float a_kp3_encoder_forward, float a_ki_dist_forward, float a_kd2_dist_forward, float a_kd3_dist_forward)
 {
-  //_AutoX.encodervalue = 0;                                                                          //Shifting the origin by initializing both the encoder values to zero
-  //_AutoY.encodervalue = 0;
+  _AutoX.updateEncoderX(0) ;                                                                       //Shifting the origin by initializing both the encoder values to zero
+  _AutoY.updateEncoderY(0) ;   
   a_prev_error_forward = a_requiredDistance_forward;
 
   while (a_distanceCovered_forward < a_requiredDistance_forward)                              //Execute the function till required distance is not reached
@@ -215,8 +215,8 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
 void backwardAutoY(float a_requiredDistance_back, float a_kp_strm2_back, float a_kp_strm3_back, float a_kp_dist_back, float a_kp_encoder_back, float a_ki_dist_back)
 {
   
-  // encodervalue1 = 0;                                                                            //Shifting the origin by initializing both the encoder values to zero
-  // encodervalue2 = 0;
+  _AutoX.updateEncoderX(0) ;                                                                             //Shifting the origin by initializing both the encoder values to zero
+  _AutoY.updateEncoderY(0) ;   
   while (a_distanceCovered_back < a_requiredDistance_back)                                      //Execute the function till required distance is not reached
   {
     AutoYaw = _AutoMpu.readMpu(2);
@@ -286,8 +286,8 @@ void backwardAutoY(float a_requiredDistance_back, float a_kp_strm2_back, float a
 void rightAutoX(float a_requiredDistance_right, float a_kp_strm1_right, float a_kp_strm2_right, float a_kp_strm3_right, float a_kp_dist_right, float a_kp_encoder_right, float a_ki_dist_right, float a_kd1_dist_right, float a_kd2_dist_right, float a_kd3_dist_right)
 {
   
-  // encodervalue1 = 0;                                                                          //Shifting the origin by initializing both the encoder values to zero
-  // encodervalue2 = 0;          
+  _AutoX.updateEncoderX(0) ;                                                                           //Shifting the origin by initializing both the encoder values to zero
+  _AutoY.updateEncoderY(0) ;          
 
   a_prev_error_right = a_requiredDistance_right; 
   while (a_distanceCovered_right < a_requiredDistance_right)                                  //Execute the function till required distance is not reached
@@ -393,8 +393,8 @@ void rightAutoX(float a_requiredDistance_right, float a_kp_strm1_right, float a_
 void leftAutoX(float a_requiredDistance_left, float a_kpstrm1_left, float a_kpstrm2_left, float a_kpstrm3_left, float a_kpdist_left, float a_kp1encoder_left, float a_kp2encoder_left, float a_kp3encoder_left, float a_kidist_left , float a_kd1_dist_left, float a_kd2_dist_left, float a_kd3_dist_left)
 {
   
-  // encodervalue1 = 0;                                                                          //Shifting the origin by initializing both the encoder values to zero
-  // encodervalue2 = 0;            
+  _AutoX.updateEncoderX(0) ;                                                                          //Shifting the origin by initializing both the encoder values to zero
+  _AutoY.updateEncoderY(0) ;           
   
   a_prev_error_left = a_requiredDistance_left;            
   

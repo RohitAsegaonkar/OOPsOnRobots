@@ -5,8 +5,8 @@
 #include "Piston.h"
 #include "Autonomous.h"
 
-#define manual 0
-#define autonomous 1
+#define manual 1
+#define autonomous 0
 
 Encoder X(2, 29);
 Encoder Y(3, 31);
