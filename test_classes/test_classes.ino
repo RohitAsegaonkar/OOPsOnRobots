@@ -236,11 +236,11 @@ void loop()
       break;
 
     case 'b':
-      //Gripper.Retract();u
+      Gripper.Retract();
       break;
 
     case 'x':
-      //Gripper.Extend();
+      Gripper.Extend();
       break;
 
     default:
