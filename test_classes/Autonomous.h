@@ -94,15 +94,16 @@ class Autonomous
 
     public :
 
-    Autonomous(Motor m1, Motor m2, Motor m3, Mpu v, Encoder *x, Encoder *y)
+    Autonomous(Motor m1, Motor m2, Motor m3, Mpu v, Encoder x, Encoder *y)
     {
       //Assigning the Motor Object
       _AutoM1 = m1;
       _AutoM2 = m2;
       _AutoM3 = m3;
       //Assigning the Encoder Object
-      _AutoX = *(x);
       _AutoY = *(y);
+      _AutoY.encodervalue = y->encodervalue;
+      _AutoX = x;
       //Assigning the MPU object
       _AutoMpu = v;
 
@@ -185,7 +186,7 @@ void forwardAutoY(float a_requiredDistance_forward, float a_kp_strm2_forward, fl
 //    Serial.print("\tError encoder: ");
 //    Serial.print(a_error_encoder_forward);
    Serial.print(" encodervalueX :      ");
-   Serial.println(_AutoX.getEncoderValue());
+   Serial.print(_AutoX.getEncoderValue());
 //      Serial.print(" \tencodervalueY:      ");
 //    Serial.print(_AutoX.getEncoderValue());
 //    Serial.print("\tdistance covered :      ");
