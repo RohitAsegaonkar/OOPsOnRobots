@@ -56,6 +56,14 @@ int Piston_Press_Event = 0;
 char Non_S_Char;
 float Last_Yaw;
 
+void Debug()
+{
+  mpu.DebugMpu(4,5);       //pass 2 PWM Pins
+  X.DebugEncoderX(7,8);    //pass 2 PWM Pins
+  Y.DebugEncoderY(9,10);   //pass 2 PWM Pins
+
+}
+
 void UpdateXEncoder()
 {
   X.updateEncoderX();
@@ -87,6 +95,8 @@ void setup()
   */
   attachInterrupt(0, UpdateXEncoder, RISING);
   attachInterrupt(1, UpdateYEncoder, RISING);
+  void Debug();
+
 }
 
 void loop()

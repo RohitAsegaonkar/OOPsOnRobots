@@ -4,6 +4,7 @@
 class Encoder
 {
     private:
+    int pwm;
     volatile int a, b, c, d;
     int encoderPin , comparePin; 
     /******* Variables for the encoder *******/
@@ -94,7 +95,57 @@ class Encoder
 //        Serial.print("encodervalue\t");
 //        Serial.println(EncoderValue);
         return EncoderValueY;
-    }
+    } 
+
+        void DebugEncoderX(int posPin,int negPin)
+        {
+            for(int i = 0; i < 2000; i++)
+            {
+                if(getEncoderValueX() < 0)
+                {
+                    pwm = map(getEncoderValueX(),0,1000,0,255);
+                    analogWrite(posPin,pwm);
+                    analogWrite(negPin,0);
+                }
+                else if(getEncoderValueX() > 0)
+                {
+                    pwm = map(getEncoderValueX(),-1,-1000,0,255);
+                    analogWrite(negPin,pwm);
+                    analogWrite(posPin,0);
+                }
+
+                else 
+                {
+                   analogWrite(negPin,0);
+                    analogWrite(posPin,0); 
+                }
+            }
+        }
+
+         void DebugEncoderY(int posPin,int negPin)
+        {
+            for(int i = 0; i < 2000; i++)
+            {
+                if(getEncoderValueY() < 0)
+                {
+                    pwm = map(getEncoderValueY(),0,1000,0,255);
+                    analogWrite(posPin,pwm);
+                    analogWrite(negPin,0);
+                }
+                else if(getEncoderValueY() > 0)
+                {
+                    pwm = map(getEncoderValueY(),-1,-1000,0,255);
+                    analogWrite(negPin,pwm);
+                    analogWrite(posPin,0);
+                }
+
+                else 
+                {
+                   analogWrite(negPin,0);
+                    analogWrite(posPin,0); 
+                }
+            }
+        }
 
 };
 
