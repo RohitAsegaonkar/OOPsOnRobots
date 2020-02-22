@@ -5,7 +5,7 @@
 #include "Piston.h"
 #include "Autonomous.h"
 
-#define manual 0
+#define manual 1
 #define autonomous 0
 
 Encoder X(2, 29);
@@ -198,13 +198,7 @@ void loop()
       break;
 
     case 'y':
-      if (prevCommand == 'S')
-      {
-        Piston_Press_Event++;
-      }
-      Piston_Press_Event %= 3;
-      if (Piston_Press_Event == 0)
-      {
+      /*
         Gripper.Retract();
         Serial.print("Piston_Press_Event:");
         Serial.println(Piston_Press_Event);
@@ -221,11 +215,12 @@ void loop()
         Gripper.Extend();
         Serial.print("Piston_Press_Event:");
         Serial.println(Piston_Press_Event);
-      }
+      }*/
+      Throwing.Extend();
       break;
 
     case 'a':
-      if (prevCommand == 'S')
+      /*if (prevCommand == 'S')
       {
         Piston_Press_Event--;
       }
@@ -248,7 +243,8 @@ void loop()
         Gripper.Retract();
         Serial.print("Piston_Press_Event:");
         Serial.println(Piston_Press_Event);
-      }
+      }*/
+      Throwing.Retract();
       break;
 
     case 'b':
