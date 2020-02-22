@@ -5,7 +5,7 @@
 #include "Piston.h"
 #include "Autonomous.h"
 
-#define manual 1
+#define manual 0
 #define autonomous 0
 
 Encoder X(2, 29);
@@ -58,9 +58,9 @@ float Last_Yaw;
 
 void Debug()
 {
-  mpu.DebugMpu(4,5);       //pass 2 PWM Pins
-  X.DebugEncoderX(7,8);    //pass 2 PWM Pins
-  Y.DebugEncoderY(9,10);   //pass 2 PWM Pins
+  mpu.DebugMpu(4, 5);       //pass 2 PWM Pins
+  X.DebugEncoderX(7, 8);    //pass 2 PWM Pins
+  Y.DebugEncoderY(9, 10);   //pass 2 PWM Pins
 
 }
 
@@ -85,7 +85,12 @@ void setup()
   Serial2.begin(115200);
   Serial3.begin(115200);
 
-
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
 
   /*
     pinMode(42,OUTPUT);
@@ -95,12 +100,13 @@ void setup()
   */
   attachInterrupt(0, UpdateXEncoder, RISING);
   attachInterrupt(1, UpdateYEncoder, RISING);
-  void Debug();
+  //void Debug();
 
 }
 
 void loop()
 {
+  Debug();
 #if autonomous
   //Serial.println(X.encodervalue);
   //Auto.forwardAutoY(200, 0.48, 0.48, ((Maxpwm/200)), 0.33, 0.33,0.00, 50, 40);

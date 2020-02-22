@@ -79,20 +79,23 @@ float Mpu::readMpu(int s = 2)
 
 void Mpu::DebugMpu(int pos, int neg)
 {
-    for(int i=0;i<2000;i++){
-    if(readMpu(2)<0){
-    analogWrite(neg,(map(readMpu(2),-1,-180,0,255)));
-    analogWrite(pos,0);
+    //for(int i=0;i<2000;i++){
+    if(readMpu(2) < 0)
+    {
+        analogWrite(neg, (map(readMpu(2), -1, -180, 0, 255)));
+        analogWrite(pos, 0);
     }
-    else if(readMpu(2)>0){
-    analogWrite(pos,(map(readMpu(2),1,180,0,255)));
-    analogWrite(neg,0);
+    else if(readMpu(2) > 0)
+    {
+        analogWrite(pos, (map(readMpu(2), 1, 180, 0, 255)));
+        analogWrite(neg, 0);
     }
-    else{
-        analogWrite(pos,0);
-        analogWrite(neg,0);
+    else
+    {
+        analogWrite(pos, 0);
+        analogWrite(neg, 0);
     }
-    }
+    //}
 
 }
 
