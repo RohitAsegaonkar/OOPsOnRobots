@@ -51,7 +51,7 @@ class Manual
 
     /****************************************** rightManX() Function Variables ********************************************/
     float error_right;
-    float error_encoder_right;
+    float error_encoder_right;ss
     float pwm_encoder_right;
     float error_sum_right;
     /**********************************************************************************************************************/

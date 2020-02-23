@@ -52,7 +52,8 @@ Piston Gripper(41, 39), Throwing(37, 35);
 #define kp_ori 2.75
 #define ki_ang 0.001
 
-int Piston_Press_Event = 0;
+bool ThrowFlag = 0;
+bool GripFlag = 0;
 char Non_S_Char;
 float Last_Yaw;
 
@@ -198,61 +199,31 @@ void loop()
       break;
 
     case 'y':
-      /*
-        Gripper.Retract();
-        Serial.print("Piston_Press_Event:");
-        Serial.println(Piston_Press_Event);
-      }
-      if (Piston_Press_Event == 1)
-      {
+    if(prevCommand == 's' || prevCommand == 'S')
+      ThrowFlag = !(ThrowFlag);
+      if(ThrowFlag)
         Throwing.Extend();
-        Serial.print("Piston_Press_Event:");
-        Serial.println(Piston_Press_Event);
-      }
-      if (Piston_Press_Event == 2)
-      {
+      else if(!ThrowFlag)
         Throwing.Retract();
-        Gripper.Extend();
-        Serial.print("Piston_Press_Event:");
-        Serial.println(Piston_Press_Event);
-      }*/
-      Throwing.Extend();
+      Serial.print("ThrowFlag\t");
+      Serial.println(ThrowFlag);  
       break;
 
     case 'a':
-      /*if (prevCommand == 'S')
-      {
-        Piston_Press_Event--;
-      }
-      Piston_Press_Event %= 3;
-      if (Piston_Press_Event == 0)
-      {
-        Gripper.Extend();
-        Serial.print("Piston_Press_Event:");
-        Serial.println(Piston_Press_Event);
-      }
-      if (Piston_Press_Event == 1)
-      {
-        Throwing.Retract();
-        Serial.print("Piston_Press_Event:");
-        Serial.println(Piston_Press_Event);
-      }
-      if (Piston_Press_Event == 2)
-      {
+    if(prevCommand == 's' || prevCommand == 'S')
+      GripFlag = !(GripFlag);
+      if(GripFlag)
         Throwing.Extend();
-        Gripper.Retract();
-        Serial.print("Piston_Press_Event:");
-        Serial.println(Piston_Press_Event);
-      }*/
-      Throwing.Retract();
+      else if(!GripFlag)
+        Throwing.Retract();
+      Serial.print("GripFlag\t");
+      Serial.println(GripFlag);  
       break;
 
     case 'b':
-      Gripper.Retract();
       break;
 
     case 'x':
-      Gripper.Extend();
       break;
 
     default:
