@@ -81,8 +81,8 @@ char prevCommand = 'a';
 
 void setup()
 {
-  Serial.begin(115200);
-  Serial1.begin(115200);
+  //Serial.begin(115200);
+  //Serial1.begin(115200);
   Serial2.begin(115200);
   Serial3.begin(115200);
 
@@ -100,7 +100,7 @@ void setup()
     pinMode(48,OUTPUT);
   */
   attachInterrupt(0, UpdateXEncoder, RISING);
-  attachInterrupt(1, UpdateYEncoder, RISING);
+  //attachInterrupt(1, UpdateYEncoder, RISING);
   //void Debug();
 
 }
@@ -114,7 +114,7 @@ void loop()
   //Auto.backwardAutoY(200, 0.25, 0.25, (Maxpwm / 200), 0.0625, 0.0000);
   //Auto.rightAutoX(200,0.45,0.45,0.45,(Maxpwm / 200), 0.05, 0.003,0,10,10);
   Auto.leftAutoX(200,0.2,1,0.8,(Maxpwm / 200)-0.005, 0.00, 0.1,0.1,0,5,20,20);
-  delay(20000);
+  delay(2000);
 #endif
 
 #if manual
@@ -177,7 +177,7 @@ void loop()
       digitalWrite(39, 0);
       digitalWrite(35, 0);
       digitalWrite(41, 0);
-      Serial.println("In s");
+//      Serial.println("In s");
       break;
 
     case 'g':
@@ -205,19 +205,19 @@ void loop()
         Throwing.Extend();
       else if(!ThrowFlag)
         Throwing.Retract();
-      Serial.print("ThrowFlag\t");
-      Serial.println(ThrowFlag);  
+//      Serial.print("ThrowFlag\t");
+//      Serial.println(ThrowFlag);  
       break;
 
     case 'a':
     if(prevCommand == 's' || prevCommand == 'S')
       GripFlag = !(GripFlag);
       if(GripFlag)
-        Throwing.Extend();
+        Gripper.Extend();
       else if(!GripFlag)
-        Throwing.Retract();
-      Serial.print("GripFlag\t");
-      Serial.println(GripFlag);  
+         Gripper.Retract();
+//      Serial.print("GripFlag\t");
+//      Serial.println(GripFlag);  
       break;
 
     case 'b':
@@ -231,7 +231,7 @@ void loop()
       M2.SetSpeed(0);
       M3.SetSpeed(0);
 
-      Serial.println("In Default");
+//      Serial.println("In Default");
 
   }
 

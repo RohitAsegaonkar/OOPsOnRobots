@@ -137,7 +137,9 @@ void reset()
 */
 void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward)
 {
-  Serial.println("In F");
+  //Serial.println("In F");
+//  detachInterrupt(0);
+//  detachInterrupt(1);
   Yaw = _V.readMpu(2);                          // Reading Mpu Values
   error_forward = Yaw - Shifted_Yaw;
 
@@ -178,7 +180,7 @@ void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encode
 //  Serial.print("\tError encoder: ");
 //  Serial.print(error_encoder_forward);
 //  Serial.print("\tencodervalue1 :      ");
-//  Serial.print(_Y.encodervalue);
+//  Serial.print(_Y.getEncoderValueY());
 //  Serial.print("\tkp_strm2_forward :      ");
 //  Serial.print(kp_strm2_forward);
 //  Serial.print("\tPWM:  ");
@@ -236,8 +238,8 @@ void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backw
 //  Serial.print(error_encoder_forward);
 //  Serial.print("\tencodervalue1 :      ");
 //  Serial.print(_Y.encodervalue);
-//  // Serial.print("\tkp_strm2_forward :      ");
-//  // Serial.print(kp_strm2_forward);
+//  Serial.print("\tkp_strm2_forward :      ");
+//  Serial.print(kp_strm2_forward);
 //  Serial.print("\tPWM:  ");
 //  Serial.print(pwmm1);
 //  Serial.print("   ");
@@ -346,24 +348,24 @@ void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP
   _M3.SetSpeed(abs(pwmm3));
 
   /********************************************* SERIAL PRINTING DATA ***************************************************/
-  Serial.print("\tYaw: ");
-  Serial.print(Yaw);
-  Serial.print("\tShifted Yaw: ");
-  Serial.print(Shifted_Yaw);
-  Serial.print("\tError: ");
-  Serial.print(error_right);
-  Serial.print("\tError encoder: ");
-  Serial.print(error_encoder_right);
-  Serial.print("\tencodervalue1 :      ");
+//  Serial.print("\tYaw: ");
+//  Serial.print(Yaw);
+//  Serial.print("\tShifted Yaw: ");
+//  Serial.print(Shifted_Yaw);
+//  Serial.print("\tError: ");
+//  Serial.print(error_right);
+//  Serial.print("\tError encoder: ");
+//  Serial.print(error_encoder_right);
+//  Serial.print("\tencodervalue1 :      ");
   //Serial.print(_X.encodervalue);
   // Serial.print("\tkp_strm2_forward :      ");
   // Serial.print(kp_strm2_right);
-  Serial.print("\tPWM:  ");
-  Serial.print(pwmm1);
-  Serial.print("   ");
-  Serial.print(pwmm2);
-  Serial.print("   ");
-  Serial.println(pwmm3);
+//  Serial.print("\tPWM:  ");
+//  Serial.print(pwmm1);
+//  Serial.print("   ");
+//  Serial.print(pwmm2);
+//  Serial.print("   ");
+//  Serial.println(pwmm3);
 
 }
 
@@ -388,8 +390,8 @@ void TTP_Man(int dir)
       _M3.SetDirection(0);
   }
 
-  Serial.print("\tShifted Yaw: ");
-  Serial.println(Shifted_Yaw);
+//  Serial.print("\tShifted Yaw: ");
+//  Serial.println(Shifted_Yaw);
 
   pwmm_ori = 50;
 
@@ -469,26 +471,26 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
         _M3.ToggleDirection();
 
         flag = 0;
-        Serial.println(".........................................");
-          Serial.print("\tYaw: ");
-        Serial.print(Yaw);
-          Serial.print("\tShifted Yaw: ");
-          Serial.print(Shifted_Yaw);
-        Serial.print("\tError: ");
-        Serial.print(error_ang);
-        Serial.print("\tFinal: ");
-        Serial.print(final_ang);
+//        Serial.println(".........................................");
+//          Serial.print("\tYaw: ");
+//        Serial.print(Yaw);
+//          Serial.print("\tShifted Yaw: ");
+//          Serial.print(Shifted_Yaw);
+//        Serial.print("\tError: ");
+//        Serial.print(error_ang);
+//        Serial.print("\tFinal: ");
+//        Serial.print(final_ang);
 //        Serial.print("\tM1_dir:  ");  
 //        Serial.print(_M1.GetDirection());
 //        Serial.print("\tM2_dir:  ");  
 //        Serial.print(_M2.GetDirection());
 //        Serial.print("\tM3_dir:  ");  
 //        Serial.print(_M3.GetDirection());        
-        Serial.print("\tprevious:  ");  
-        Serial.print(prev_error);
-        Serial.print("\tdir:  ");
-        Serial.println(dir);
-        Serial.println(".........................................");
+//        Serial.print("\tprevious:  ");  
+//        Serial.print(prev_error);
+//        Serial.print("\tdir:  ");
+//        Serial.println(dir);
+//        Serial.println(".........................................");
 
     }
 
@@ -519,14 +521,14 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
 
     /********************************************* SERIAL PRINTING DATA ***************************************************/
 
-        Serial.print("\tYaw: ");
-        Serial.print(Yaw);
-          Serial.print("\tShifted Yaw: ");
-          Serial.print(Shifted_Yaw);
-        Serial.print("\tError: ");
-        Serial.print(error_ang);
-        Serial.print("\tFinal: ");
-        Serial.print(final_ang);
+//        Serial.print("\tYaw: ");
+//        Serial.print(Yaw);
+//        Serial.print("\tShifted Yaw: ");
+//        Serial.print(Shifted_Yaw);
+//        Serial.print("\tError: ");
+//        Serial.print(error_ang);
+//        Serial.print("\tFinal: ");
+//        Serial.print(final_ang);
 //        Serial.print("\tKp:  ");
 //        Serial.print(KP_Orient);
 //        Serial.print("\tPWM:  ");
@@ -539,10 +541,10 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
 //        Serial.print(_M2.GetDirection());
 //        Serial.print("\tM3_dir:  ");  
 //        Serial.print(_M3.GetDirection());        
-        Serial.print("\tprevious:  ");  
-        Serial.print(prev_error);
-        Serial.print("\tdir:  ");
-        Serial.println(dir);
+//        Serial.print("\tprevious:  ");  
+//        Serial.print(prev_error);
+//        Serial.print("\tdir:  ");
+//        Serial.println(dir);
 
   }
 
