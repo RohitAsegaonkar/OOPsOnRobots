@@ -81,8 +81,8 @@ char prevCommand = 'a';
 
 void setup()
 {
-  //Serial.begin(115200);
-  //Serial1.begin(115200);
+  Serial.begin(115200);
+//  Serial1.begin(115200);
   Serial2.begin(115200);
   Serial3.begin(115200);
 
@@ -99,7 +99,7 @@ void setup()
     pinMode(46,OUTPUT);
     pinMode(48,OUTPUT);
   */
-  attachInterrupt(0, UpdateXEncoder, RISING);
+  //attachInterrupt(0, UpdateXEncoder, RISING);
   //attachInterrupt(1, UpdateYEncoder, RISING);
   //void Debug();
 
@@ -138,22 +138,22 @@ void loop()
 
   switch (command)
   {
-    case 'F':
+    case 'B':
       A.forwardManY(Kp_strm2_forward, Kp_strm3_forward, Kp_encoder_forward);
       //Serial.println("In F");
       break;
 
-    case 'B':
+    case 'F':
       A.backwardManY(Kp_strm2_back, Kp_strm3_back, Kp_encoder_back);
       //Serial.println("In B");
       break;
 
-    case 'L':
+    case 'R':
       A.leftManX(Kp_strm1_left, Kp_strm2_left, Kp_strm3_left, Kp_encoder_left);
       //Serial.println("In L");
       break;
 
-    case 'R':
+    case 'L':
       A.rightManX(Kp_strm1_left, Kp_strm2_left, Kp_strm3_left, Kp_encoder_left);
       //Serial.println("In R");
       break;
@@ -190,11 +190,11 @@ void loop()
       A.reset();
       break;
 
-    case 'c':
+    case 'd':
       A.TTP_Man(0);
       break;
 
-    case 'd':
+    case 'c':
       A.TTP_Man(1);
       break;
 

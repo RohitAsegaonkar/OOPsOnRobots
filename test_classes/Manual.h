@@ -23,7 +23,7 @@ class Manual
 
     /*********************************************** PWM Values ***********************************************************/
     #define Maxpwm 200.00
-    #define basePwm 150
+    #define basePwm 180
     int pwmm1, pwmm2, pwmm3;
     bool flag = 1;
     /**********************************************************************************************************************/
@@ -171,8 +171,8 @@ void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encode
   /********************************************* SERIAL PRINTING DATA ***************************************************/
 
 
-//  Serial.print("\tYaw: ");
-//  Serial.print(Yaw);
+  Serial.print("\tYaw: ");
+  Serial.println(Yaw);
 //  Serial.print("\tShifted Yaw: ");
 //  Serial.print(Shifted_Yaw);
 //  Serial.print("\tError: ");
