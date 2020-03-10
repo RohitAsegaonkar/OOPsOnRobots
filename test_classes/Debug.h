@@ -1,4 +1,4 @@
-#ifndef _Debug_H_
+ifndef _Debug_H_
 #define _Debug_H_
 
 #include "Encoder.h"

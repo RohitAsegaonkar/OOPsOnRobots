@@ -17,7 +17,7 @@ Motor M1(26, 0, 6);
 Motor M2(38, 1, 12);
 Motor M3(36, 1, 11);
 
-Manual A(M1, M2, M3, mpu, X, Y);
+Manual A(M1, M2, M3, X, Y);
 Autonomous Auto(M1, M2, M3, mpu, X, Y);
 
 Piston Gripper(41, 39), Throwing(37, 35);
@@ -133,28 +133,28 @@ void loop()
   if ((prevCommand != command) && (command != 'p' || command != 'g'))
   {
     //Serial.println("In Reset condition");
-    A.reset();
+    A.reset(mpu.readMpu(2));
   }
 
   switch (command)
   {
-    case 'B':
-      A.forwardManY(Kp_strm2_forward, Kp_strm3_forward, Kp_encoder_forward);
+    case 'F':
+      A.forwardManY(Kp_strm2_forward, Kp_strm3_forward, Kp_encoder_forward, mpu.readMpu(2));
       //Serial.println("In F");
       break;
 
-    case 'F':
-      A.backwardManY(Kp_strm2_back, Kp_strm3_back, Kp_encoder_back);
+    case 'B':
+      A.backwardManY(Kp_strm2_back, Kp_strm3_back, Kp_encoder_back, mpu.readMpu(2));
       //Serial.println("In B");
       break;
 
-    case 'R':
-      A.leftManX(Kp_strm1_left, Kp_strm2_left, Kp_strm3_left, Kp_encoder_left);
+    case 'L':
+      A.leftManX(Kp_strm1_left, Kp_strm2_left, Kp_strm3_left, Kp_encoder_left,  mpu.readMpu(2));
       //Serial.println("In L");
       break;
 
-    case 'L':
-      A.rightManX(Kp_strm1_left, Kp_strm2_left, Kp_strm3_left, Kp_encoder_left);
+    case 'R':
+      A.rightManX(Kp_strm1_left, Kp_strm2_left, Kp_strm3_left, Kp_encoder_left,  mpu.readMpu(2));
       //Serial.println("In R");
       break;
 
@@ -181,13 +181,13 @@ void loop()
       break;
 
     case 'g':
-      A.TurnMan(kp_ori, ki_ang, 15.00, 0);
-      A.reset();
+      A.TurnMan(kp_ori, ki_ang, 15.00, 0,  mpu.readMpu(2));
+      A.reset(mpu.readMpu(2));
       break;
 
     case 'p':
-      A.TurnMan(kp_ori, ki_ang, 15.00, 1);
-      A.reset();
+      A.TurnMan(kp_ori, ki_ang, 15.00, 1,  mpu.readMpu(2));
+      A.reset(mpu.readMpu(2));
       break;
 
     case 'd':

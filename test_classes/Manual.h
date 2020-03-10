@@ -22,8 +22,8 @@ class Manual
     /**********************************************************************************************************************/
 
     /*********************************************** PWM Values ***********************************************************/
-    #define Maxpwm 200.00
-    #define basePwm 180
+    #define Maxpwm 120.00
+    #define basePwm 100
     int pwmm1, pwmm2, pwmm3;
     bool flag = 1;
     /**********************************************************************************************************************/
@@ -70,7 +70,7 @@ class Manual
       Yaw = 0;
     }
 
-    Manual(Motor m1, Motor m2, Motor m3, Mpu v, Encoder x, Encoder y)
+    Manual(Motor m1, Motor m2, Motor m3, Encoder x, Encoder y)
     {
       //Assigning the Motor Object
       _M1 = m1;
@@ -80,7 +80,7 @@ class Manual
       _X = x;
       _Y = y;
       //Assigning the MPU object
-      _V = v;
+      //_V = v;
     }
 
     int final_ang = 0, correction_angle = 0;
@@ -109,16 +109,16 @@ void UpdateShiftedYaw(float Yaw_ref)
     Output              : Resets all the Variables
     Example Call        : reset()
 */
-void reset()
+void reset(float global_yaw)
 {
 //  _Y.encodervalue = 0;
 //  _X.encodervalue = 0;
 
-  Serial.print("In Reset");
-  Serial.print("\tA.Yaw = ");  
-  Serial.println(_V.readMpu(2));
+//  Serial.print("In Reset");
+//  Serial.print("\tA.Yaw = ");  
+//  Serial.println(global_yaw);
 
-  UpdateShiftedYaw(_V.readMpu(2));
+  UpdateShiftedYaw(global_yaw);
 
   pwmm1 = 0;
   pwmm2 = 0;
@@ -135,15 +135,15 @@ void reset()
                           PID is implemented for precise movement.
     Example Call        : forwardManY(float kp_strm2_forward,float kp_strm3_forward,float kp_encoder_forward);
 */
-void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward)
+void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encoder_forward, float global_yaw)
 {
   //Serial.println("In F");
 //  detachInterrupt(0);
 //  detachInterrupt(1);
-  Yaw = _V.readMpu(2);                          // Reading Mpu Values
+  Yaw = global_yaw;                          // Reading Mpu Values
   error_forward = Yaw - Shifted_Yaw;
 
-  error_encoder_forward = _X.getEncoderValueX();
+  //error_encoder_forward = _X.getEncoderValueX();
   pwm_encoder_forward = kp_encoder_forward * (error_encoder_forward);
 
   pwmm2 = basePwm + kp_strm2_forward * (error_forward) - pwm_encoder_forward ;
@@ -162,7 +162,7 @@ void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encode
 
   _M1.SetDirection(0);
   _M2.SetDirection(1);
-  _M3.SetDirection(1);
+  _M3.SetDirection(0);
 
   _M1.SetSpeed(0);
   _M2.SetSpeed(abs(pwmm2));
@@ -171,8 +171,8 @@ void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encode
   /********************************************* SERIAL PRINTING DATA ***************************************************/
 
 
-  Serial.print("\tYaw: ");
-  Serial.println(Yaw);
+//  Serial.print("\tYaw: ");
+//  Serial.println(Yaw);
 //  Serial.print("\tShifted Yaw: ");
 //  Serial.print(Shifted_Yaw);
 //  Serial.print("\tError: ");
@@ -201,9 +201,9 @@ void forwardManY(float kp_strm2_forward, float kp_strm3_forward, float kp_encode
                         PID is implemented for precise movement.
     Example Call     :  backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward);
 */
-void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward)
+void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backward, float global_yaw)
 {
-  Yaw = _V.readMpu(2);                         // Reading Mpu Values
+  Yaw = global_yaw;                         // Reading Mpu Values
   error_back = Yaw - Shifted_Yaw;
 
   error_encoder_back = _X.getEncoderValueX();
@@ -220,7 +220,7 @@ void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backw
 
   _M1.SetDirection(1);
   _M2.SetDirection(0);
-  _M3.SetDirection(0);
+  _M3.SetDirection(1);
 
   _M1.SetSpeed(0);
   _M2.SetSpeed(abs(pwmm2));
@@ -238,8 +238,8 @@ void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backw
 //  Serial.print(error_encoder_forward);
 //  Serial.print("\tencodervalue1 :      ");
 //  Serial.print(_Y.encodervalue);
-//  Serial.print("\tkp_strm2_forward :      ");
-//  Serial.print(kp_strm2_forward);
+////  Serial.print("\tkp_strm2_forward :      ");
+////  Serial.print(KP_strm2_forward);
 //  Serial.print("\tPWM:  ");
 //  Serial.print(pwmm1);
 //  Serial.print("   ");
@@ -258,9 +258,9 @@ void backwardManY(float KP_M2_Backward, float KP_M3_Backward, float KP_Enc_Backw
                             PID is implemented for precise movement.
     Example Call          : leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left);
 */
-void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left)
+void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc_Left, float global_yaw)
 {
-  Yaw = _V.readMpu(2);
+  Yaw = global_yaw;
   error_left = Yaw - Shifted_Yaw;                                                 //Calculate the angular shift of the bot. Yaw_ref is the reference yaw value from the previous function                       //Calculating the basepwm in proportion with the error
 
   error_encoder_left = _Y.getEncoderValueY();                                           //Error for locomotion in X direction is given by the y encoder
@@ -279,8 +279,8 @@ void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc
   if (pwmm3 > Maxpwm)
     pwmm3 = Maxpwm / 2;
 
-  _M1.SetDirection(1);
-  _M2.SetDirection(1);
+  _M1.SetDirection(0);
+  _M2.SetDirection(0);
   _M3.SetDirection(0);
 
   _M1.SetSpeed(abs(pwmm1));
@@ -298,7 +298,7 @@ void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc
 //  Serial.print("\tError encoder: ");
 //  Serial.print(error_encoder_left);
 //  Serial.print("\tencodervalue1 :      ");
-//  /Serial.print(_X.encodervalue);
+//  Serial.print(_X.encodervalue);
 //  // Serial.print("\tkp_strm2_forward :      ");
 //  // Serial.print(kp_strm2_forward);
 //  Serial.print("\tPWM:  ");
@@ -319,11 +319,12 @@ void leftManX(float KP_M1_Left, float KP_M2_Left, float KP_M3_Left, float KP_Enc
                             PID is implemented for precise movement.
     Example Call         :  rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right);
 */
-void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right)
+void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP_Enc_Right, float global_yaw)
 {
-  Yaw = _V.readMpu(2);
-
-  error_encoder_right = _Y.getEncoderValueX();
+  Yaw = global_yaw;
+  error_right = Yaw - Shifted_Yaw; 
+  
+  //error_encoder_right = _Y.getEncoderValueX();
   pwm_encoder_right = KP_Enc_Right * (error_encoder_right);
 
   pwmm1 = basePwm + KP_M1_Right * (error_right) - pwm_encoder_right;
@@ -339,8 +340,8 @@ void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP
   if (pwmm3 > Maxpwm)
     pwmm3 = Maxpwm / 2;
 
-  _M1.SetDirection(0);
-  _M2.SetDirection(0);
+  _M1.SetDirection(1);
+  _M2.SetDirection(1);
   _M3.SetDirection(1);
 
   _M1.SetSpeed(abs(pwmm1));
@@ -357,9 +358,9 @@ void rightManX(float KP_M1_Right, float KP_M2_Right, float KP_M3_Right, float KP
 //  Serial.print("\tError encoder: ");
 //  Serial.print(error_encoder_right);
 //  Serial.print("\tencodervalue1 :      ");
-  //Serial.print(_X.encodervalue);
-  // Serial.print("\tkp_strm2_forward :      ");
-  // Serial.print(kp_strm2_right);
+//  Serial.print(_X.encodervalue);
+////   Serial.print("\tkp_strm2_forward :      ");
+////   Serial.print(kp_strm2_right);
 //  Serial.print("\tPWM:  ");
 //  Serial.print(pwmm1);
 //  Serial.print("   ");
@@ -381,13 +382,13 @@ void TTP_Man(int dir)
   {
       _M1.SetDirection(1);
       _M2.SetDirection(0);
-      _M3.SetDirection(1);
+      _M3.SetDirection(0);
   }
   else if (dir == 1)
   {
       _M1.SetDirection(0);
       _M2.SetDirection(1);
-      _M3.SetDirection(0);
+      _M3.SetDirection(1);
   }
 
 //  Serial.print("\tShifted Yaw: ");
@@ -430,26 +431,26 @@ void TTP_Man(int dir)
     Logic               : Bot orients at desired or required angle from initial position, all motors are given equal pwm until it acquires desired angle.
     Example Call        : M_Turn(KP_Orient, KI_Angle, 338.00);
 */
-void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
+void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir, float global_yaw)
 {
   error_ang = 5;
     if (!dir)
     {
       _M1.SetDirection(0);
       _M2.SetDirection(1);
-      _M3.SetDirection(0);
+      _M3.SetDirection(1);
     }
     else
     {
       _M1.SetDirection(1);
       _M2.SetDirection(0);
-      _M3.SetDirection(1);
+      _M3.SetDirection(0);
     }
 
   while ( abs(error_ang) > 2)
   {
     // read from port 1, send to port 0:
-    Yaw = _V.readMpu(2);
+    Yaw = global_yaw;
 
     final_ang  = pow(-1, !dir) * req_angle + Shifted_Yaw ;
     final_ang += ((final_ang < - 180) - (final_ang > 180)) * 360 ;
@@ -471,26 +472,26 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
         _M3.ToggleDirection();
 
         flag = 0;
-//        Serial.println(".........................................");
-//          Serial.print("\tYaw: ");
-//        Serial.print(Yaw);
-//          Serial.print("\tShifted Yaw: ");
-//          Serial.print(Shifted_Yaw);
-//        Serial.print("\tError: ");
-//        Serial.print(error_ang);
-//        Serial.print("\tFinal: ");
-//        Serial.print(final_ang);
-//        Serial.print("\tM1_dir:  ");  
-//        Serial.print(_M1.GetDirection());
-//        Serial.print("\tM2_dir:  ");  
-//        Serial.print(_M2.GetDirection());
-//        Serial.print("\tM3_dir:  ");  
-//        Serial.print(_M3.GetDirection());        
-//        Serial.print("\tprevious:  ");  
-//        Serial.print(prev_error);
-//        Serial.print("\tdir:  ");
-//        Serial.println(dir);
-//        Serial.println(".........................................");
+       /* Serial.println(".........................................");
+          Serial.print("\tYaw: ");
+        Serial.print(Yaw);
+          Serial.print("\tShifted Yaw: ");
+          Serial.print(Shifted_Yaw);
+        Serial.print("\tError: ");
+        Serial.print(error_ang);
+        Serial.print("\tFinal: ");
+        Serial.print(final_ang);
+        Serial.print("\tM1_dir:  ");  
+        Serial.print(_M1.GetDirection());
+        Serial.print("\tM2_dir:  ");  
+        Serial.print(_M2.GetDirection());
+        Serial.print("\tM3_dir:  ");  
+        Serial.print(_M3.GetDirection());        
+        Serial.print("\tprevious:  ");  
+        Serial.print(prev_error);
+        Serial.print("\tdir:  ");
+        Serial.println(dir);
+        Serial.println(".........................................");*/
 
     }
 
@@ -536,15 +537,15 @@ void TurnMan(float KP_Orient, float KI_Angle, float req_angle, int dir)
 //        Serial.print("\trate:  ");
 //        Serial.print(rate_change);
 //        Serial.print("\tM1_dir:  ");  
-//        Serial.print(_M1.GetDirection());
-//        Serial.print("\tM2_dir:  ");  
-//        Serial.print(_M2.GetDirection());
-//        Serial.print("\tM3_dir:  ");  
-//        Serial.print(_M3.GetDirection());        
-//        Serial.print("\tprevious:  ");  
-//        Serial.print(prev_error);
-//        Serial.print("\tdir:  ");
-//        Serial.println(dir);
+        /*Serial.print(_M1.GetDirection());
+        Serial.print("\tM2_dir:  ");  
+        Serial.print(_M2.GetDirection());
+        Serial.print("\tM3_dir:  ");  
+        Serial.print(_M3.GetDirection());        
+        Serial.print("\tprevious:  ");  
+        Serial.print(prev_error);
+        Serial.print("\tdir:  ");
+        Serial.println(dir);*/
 
   }
 

@@ -55,7 +55,7 @@ float Mpu::readMpu(int s = 2)
             }
  
             _Yaw = yaw * (180.00 / 127.00);
-            
+//            Serial.println(_Yaw);
             return _Yaw;    
 
             break;
