@@ -1,8 +1,8 @@
-# OOPsOnRobots
+# Pass_Robot(initially OOPsOnRobots)
 
 Classes and objects implementation.
 
-## Class Piston
+## 1.Class Piston
 
 Class piston is used to represent a piston.
 
@@ -41,7 +41,7 @@ P1.Retract();     //Retracting the Piston
 
 ```
 
-## Class Encoder
+## 2.Class Encoder
 
 Class Encoder is used to represent a Encoder.
 
@@ -80,7 +80,7 @@ X.updateEncoder();     //Updating Encoder Values
 
 ```
 
-## Class Mpu
+## 3.Class Mpu
 
 Class Mpu is used to represent the inertial measurement unit MPU6050.
 
@@ -99,7 +99,7 @@ Class Mpu is used to represent the inertial measurement unit MPU6050.
 
 Meaning of parameters:
 
- *s - to select the serial port.
+- s - to select the serial port.
 
 | s  | serial port |
 |--- |-------------|
